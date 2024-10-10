@@ -52,6 +52,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.9",
     "@types/lodash": "^4.17.10",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -66,5 +67,10 @@
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.1",
     "typescript": "^5"
+  },
+  "dockerfile": {
+    "secrets": [
+      "CLERK_SECRET_KEY"
+    ]
   }
 }
