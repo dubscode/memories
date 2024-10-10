@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 0.3.0 (2024-10-10)
+
+
+### Features
+
+* **app:** setup clerk ([e5efb9f](https://github.com/dubscode/memories/commit/e5efb9f480394ac91cea17a3395ba82ff7242dd0))
+
 ## 0.2.0 (2024-10-01)
 
 ### Features
