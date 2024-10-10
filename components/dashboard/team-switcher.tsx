@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   CaretSortIcon,
   CheckIcon,
-  PlusCircledIcon,
+  PlusCircledIcon
 } from '@radix-ui/react-icons';
 import {
   Command,
@@ -15,7 +15,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
+  CommandSeparator
 } from '@/components/ui/command';
 import {
   Dialog,
@@ -24,19 +24,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/components/ui/dialog';
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverTrigger
 } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from '@/components/ui/select';
 
 import { Button } from '@/components/ui/button';
@@ -50,23 +50,23 @@ const groups = [
     teams: [
       {
         label: 'Alicia Koch',
-        value: 'personal',
-      },
-    ],
+        value: 'personal'
+      }
+    ]
   },
   {
     label: 'Teams',
     teams: [
       {
         label: 'Acme Inc.',
-        value: 'acme-inc',
+        value: 'acme-inc'
       },
       {
         label: 'Monsters Inc.',
-        value: 'monsters',
-      },
-    ],
-  },
+        value: 'monsters'
+      }
+    ]
+  }
 ];
 
 type Team = (typeof groups)[number]['teams'][number];
@@ -87,14 +87,8 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   );
 
   return (
-    <Dialog
-      open={showNewTeamDialog}
-      onOpenChange={setShowNewTeamDialog}
-    >
-      <Popover
-        open={open}
-        onOpenChange={setOpen}
-      >
+    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant='outline'
@@ -121,10 +115,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             <CommandList>
               <CommandEmpty>No team found.</CommandEmpty>
               {groups.map((group) => (
-                <CommandGroup
-                  key={group.label}
-                  heading={group.label}
-                >
+                <CommandGroup key={group.label} heading={group.label}>
                   {group.teams.map((team) => (
                     <CommandItem
                       key={team.value}
@@ -186,10 +177,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           <div className='space-y-4 py-2 pb-4'>
             <div className='space-y-2'>
               <Label htmlFor='name'>Team name</Label>
-              <Input
-                id='name'
-                placeholder='Acme Inc.'
-              />
+              <Input id='name' placeholder='Acme Inc.' />
             </div>
             <div className='space-y-2'>
               <Label htmlFor='plan'>Subscription plan</Label>
@@ -216,10 +204,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           </div>
         </div>
         <DialogFooter>
-          <Button
-            variant='outline'
-            onClick={() => setShowNewTeamDialog(false)}
-          >
+          <Button variant='outline' onClick={() => setShowNewTeamDialog(false)}>
             Cancel
           </Button>
           <Button type='submit'>Continue</Button>

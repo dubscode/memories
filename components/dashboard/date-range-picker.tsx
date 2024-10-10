@@ -5,7 +5,7 @@ import * as React from 'react';
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverTrigger
 } from '@/components/ui/popover';
 import { addDays, format } from 'date-fns';
 
@@ -16,11 +16,11 @@ import { DateRange } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 
 export function CalendarDateRangePicker({
-  className,
+  className
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2023, 0, 20),
-    to: addDays(new Date(2023, 0, 20), 20),
+    to: addDays(new Date(2023, 0, 20), 20)
   });
 
   return (
@@ -50,10 +50,7 @@ export function CalendarDateRangePicker({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className='w-auto p-0'
-          align='end'
-        >
+        <PopoverContent className='w-auto p-0' align='end'>
           <Calendar
             initialFocus
             mode='range'

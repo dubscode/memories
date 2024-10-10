@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { dbMigrations, migrationClient } from '@/lib/db';
 
 import { sql } from 'drizzle-orm';

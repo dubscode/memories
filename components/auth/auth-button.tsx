@@ -1,15 +1,19 @@
-'use client';
-
-import { SignIn } from './sign-in';
-import { SignOut } from './sign-out';
-import { useSession } from 'next-auth/react';
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { Button } from '@/components/ui/button';
 
 export const AuthButton = () => {
-  const { data: session } = useSession();
-
-  if (!session?.user) {
-    return <SignIn />;
-  } else {
-    return <SignOut user={session.user} />;
-  }
+  return (
+    <>
+      <SignedOut>
+        <SignInButton>
+          <Button className='text-sm' variant='ghost'>
+            Sign in
+          </Button>
+        </SignInButton>
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </>
+  );
 };

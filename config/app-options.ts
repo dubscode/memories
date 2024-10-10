@@ -19,8 +19,8 @@ export const appOptions: AppOptions = {
     { href: '/features', label: 'Features' },
     { href: '/pricing', label: 'Pricing' },
     { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
-  ],
+    { href: '/contact', label: 'Contact' }
+  ]
 };
 
 import localFont from 'next/font/local';
@@ -28,10 +28,10 @@ import localFont from 'next/font/local';
 export const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
-  weight: '100 900',
+  weight: '100 900'
 });
 export const geistMono = localFont({
   src: './fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
-  weight: '100 900',
+  weight: '100 900'
 });

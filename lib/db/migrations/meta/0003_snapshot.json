@@ -1,6 +1,6 @@
 {
-  "id": "3ba28960-339d-4a03-8b5d-204a6a71dee2",
-  "prevId": "a0c63f18-4185-42e1-83c6-98b8ab852965",
+  "id": "58866479-6e24-4e74-bf6c-cbb7d75768a2",
+  "prevId": "2f2ed3f1-cbed-4dc5-9fcc-212a792ad533",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -12,7 +12,8 @@
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "email": {
           "name": "email",
@@ -20,20 +21,26 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email_verified": {
-          "name": "email_verified",
-          "type": "timestamp (6) with time zone",
+        "clerk_id": {
+          "name": "clerk_id",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "image": {
-          "name": "image",
+        "first_name": {
+          "name": "first_name",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "name": {
-          "name": "name",
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profile_image_url": {
+          "name": "profile_image_url",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -59,8 +66,10 @@
       "uniqueConstraints": {
         "users_email_unique": {
           "name": "users_email_unique",
-          "columns": ["email"],
-          "nullsNotDistinct": false
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
         }
       }
     }

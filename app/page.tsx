@@ -8,14 +8,14 @@ import { Input } from '@/components/ui/input';
 export default function LandingPage() {
   return (
     <main className='flex-1'>
-      <section className='w-full py-12 md:py-24 lg:py-32 xl:py-48 flex items-center justify-center'>
+      <section className='flex w-full items-center justify-center py-12 md:py-24 lg:py-32 xl:py-48'>
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center space-y-4 text-center'>
             <div className='space-y-2'>
               <h1 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none'>
                 Welcome to the Future of Technology
               </h1>
-              <p className='mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400'>
+              <p className='mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl'>
                 Discover how our innovative solutions can transform your
                 business and drive growth.
               </p>
@@ -27,15 +27,15 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <section className='w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800'>
-        <div className='container px-4 md:px-6 mx-auto'>
-          <h2 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8'>
+      <section className='w-full bg-gray-100 py-12 dark:bg-gray-800 md:py-24 lg:py-32'>
+        <div className='container mx-auto px-4 md:px-6'>
+          <h2 className='mb-8 text-center text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl'>
             Our Key Features
           </h2>
-          <div className='grid gap-6 lg:grid-cols-3 lg:gap-12 justify-items-center'>
+          <div className='grid justify-items-center gap-6 lg:grid-cols-3 lg:gap-12'>
             <Card className='w-full max-w-sm'>
               <CardHeader>
-                <Shield className='w-8 h-8 mb-2' />
+                <Shield className='mb-2 h-8 w-8' />
                 <CardTitle>Secure</CardTitle>
               </CardHeader>
               <CardContent>
@@ -47,7 +47,7 @@ export default function LandingPage() {
             </Card>
             <Card className='w-full max-w-sm'>
               <CardHeader>
-                <Zap className='w-8 h-8 mb-2' />
+                <Zap className='mb-2 h-8 w-8' />
                 <CardTitle>Fast</CardTitle>
               </CardHeader>
               <CardContent>
@@ -59,7 +59,7 @@ export default function LandingPage() {
             </Card>
             <Card className='w-full max-w-sm'>
               <CardHeader>
-                <BarChart className='w-8 h-8 mb-2' />
+                <BarChart className='mb-2 h-8 w-8' />
                 <CardTitle>Insightful</CardTitle>
               </CardHeader>
               <CardContent>
@@ -72,8 +72,8 @@ export default function LandingPage() {
         </div>
       </section>
       <section className='w-full py-12 md:py-24 lg:py-32'>
-        <div className='container px-4 md:px-6 mx-auto'>
-          <div className='grid gap-6 lg:grid-cols-2 lg:gap-12 items-center'>
+        <div className='container mx-auto px-4 md:px-6'>
+          <div className='grid items-center gap-6 lg:grid-cols-2 lg:gap-12'>
             <div className='space-y-4'>
               <h2 className='text-3xl font-bold tracking-tighter sm:text-4xl'>
                 Why Choose Us?
@@ -109,7 +109,7 @@ export default function LandingPage() {
                 src='https://placehold.co/600x400/png'
                 style={{
                   aspectRatio: '600/400',
-                  objectFit: 'cover',
+                  objectFit: 'cover'
                 }}
                 width='600'
               />
@@ -117,14 +117,14 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <section className='w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800'>
-        <div className='container px-4 md:px-6 mx-auto'>
+      <section className='w-full bg-gray-100 py-12 dark:bg-gray-800 md:py-24 lg:py-32'>
+        <div className='container mx-auto px-4 md:px-6'>
           <div className='flex flex-col items-center justify-center space-y-4 text-center'>
             <div className='space-y-2'>
               <h2 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl'>
                 Ready to Get Started?
               </h2>
-              <p className='mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400'>
+              <p className='mx-auto max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed'>
                 Join thousands of satisfied customers and take your business to
                 the next level.
               </p>

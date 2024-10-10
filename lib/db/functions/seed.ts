@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { dbMigrations, migrationClient } from '@/lib/db';
 
 import { sql } from 'drizzle-orm';
@@ -11,11 +13,16 @@ async function main() {
     .insert(users)
     .values({
       email: 'fake@email.COM',
-      name: 'Fake User',
+      firstName: 'Fake',
+      lastName: 'User',
+      clerkId: 'fake-clerk-id'
     })
     .onConflictDoUpdate({
       target: users.email,
-      set: { name: sql`excluded.name` },
+      set: {
+        firstName: sql`excluded.first_name`,
+        lastName: sql`excluded.last_name`
+      }
     })
     .returning();
 

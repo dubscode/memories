@@ -14,11 +14,8 @@ export const Header = () => {
   }
 
   return (
-    <header className='px-4 lg:px-6 h-14 flex items-center justify-between'>
-      <Link
-        className='flex items-center justify-center'
-        href='/'
-      >
+    <header className='flex h-14 items-center justify-between px-4 lg:px-6'>
+      <Link className='flex items-center justify-center' href='/'>
         <Zap className='h-6 w-6' />
         <span className='ml-2 font-bold'>{appOptions.appName}</span>
       </Link>
@@ -26,7 +23,7 @@ export const Header = () => {
         {appOptions.navLinks.map((link, idx) => (
           <Link
             key={idx}
-            className='text-sm font-medium hover:underline underline-offset-4'
+            className='text-sm font-medium underline-offset-4 hover:underline'
             href={link.href}
           >
             {link.label}

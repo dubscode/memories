@@ -1,2 +1,1 @@
-export { users, userRelations } from './users';
-export { accounts, accountsRelations } from './accounts';
+export { users } from './users';
