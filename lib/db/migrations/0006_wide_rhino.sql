@@ -1,0 +1,1 @@
+ALTER TABLE "challenges" ADD COLUMN "public" boolean DEFAULT true NOT NULL;

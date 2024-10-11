@@ -1,7 +1,14 @@
 import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 
+import { challenges } from './challenges';
 import { createInsertSchema } from 'drizzle-zod';
+import { fileStorage } from './file-storage';
+import { notes } from './notes';
+import { relations } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
+import { submissions } from './submissions';
+import { tasks } from './tasks';
+import { teams } from './teams';
 
 export const users = pgTable('users', {
   id: text('id')
@@ -21,6 +28,18 @@ export const users = pgTable('users', {
     .notNull()
     .$onUpdate(() => new Date())
 });
+
+export const usersRelations = relations(users, ({ many, one }) => ({
+  challenges: many(challenges),
+  files: many(fileStorage),
+  notes: many(notes),
+  submission: one(submissions, {
+    fields: [users.id],
+    references: [submissions.userId]
+  }),
+  tasks: many(tasks),
+  teams: many(teams)
+}));
 
 export const insertUserSchema = createInsertSchema(users, {
   email: (schema) => schema.email.trim().toLowerCase()
