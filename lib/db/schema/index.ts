@@ -1,3 +1,5 @@
+export { aiConversations, aiConversationsRelations } from './ai-conversations';
+export { aiMessages, aiMessagesRelations } from './ai-messages';
 export { challenges, challengesRelations } from './challenges';
 export { events, eventsRelations } from './events';
 export { fileStorage, fileStorageRelations } from './file-storage';
