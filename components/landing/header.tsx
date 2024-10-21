@@ -4,9 +4,11 @@ import { AuthButton } from '../auth/auth-button';
 import Link from 'next/link';
 import { Zap } from 'lucide-react';
 import { appOptions } from '@/config/app-options';
+import { useAuth } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
 
 export const Header = () => {
+  const { userId } = useAuth();
   const pathname = usePathname();
 
   if (pathname.includes('dashboard')) {
@@ -20,6 +22,23 @@ export const Header = () => {
         <span className='ml-2 font-bold'>{appOptions.appName}</span>
       </Link>
       <nav className='flex gap-4 sm:gap-6'>
+        {userId ? (
+          <>
+            <Link
+              className='text-sm font-medium underline-offset-4 hover:underline'
+              href='/admin'
+            >
+              Admin
+            </Link>
+            <Link
+              className='text-sm font-medium underline-offset-4 hover:underline'
+              href='/dashboard'
+            >
+              Dashboard
+            </Link>
+          </>
+        ) : null}
+
         {appOptions.navLinks.map((link, idx) => (
           <Link
             key={idx}

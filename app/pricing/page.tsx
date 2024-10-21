@@ -1,49 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';
-import { CheckCircle } from 'lucide-react';
+import Image from 'next/image';
+import drEvil from '@/images/one-hundred-million.jpg';
 
 export default function PricingPage() {
-  const plans = [
-    {
-      name: 'Basic',
-      price: '$9.99',
-      description: 'For individuals and small teams',
-      features: ['1 user', '10 projects', '5GB storage', 'Basic support']
-    },
-    {
-      name: 'Pro',
-      price: '$29.99',
-      description: 'For growing businesses',
-      features: [
-        '5 users',
-        'Unlimited projects',
-        '50GB storage',
-        'Priority support',
-        'Advanced analytics'
-      ]
-    },
-    {
-      name: 'Enterprise',
-      price: 'Custom',
-      description: 'For large organizations',
-      features: [
-        'Unlimited users',
-        'Unlimited projects',
-        'Unlimited storage',
-        '24/7 dedicated support',
-        'Custom integrations'
-      ]
-    }
-  ];
-
   return (
     <div className='flex min-h-screen flex-col'>
       <main className='flex-1'>
@@ -60,29 +20,13 @@ export default function PricingPage() {
                 </p>
               </div>
             </div>
-            <div className='mt-8 grid gap-6 md:grid-cols-3'>
-              {plans.map((plan) => (
-                <Card key={plan.name} className='flex flex-col justify-between'>
-                  <CardHeader>
-                    <CardTitle>{plan.name}</CardTitle>
-                    <CardDescription>{plan.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className='mb-4 text-4xl font-bold'>{plan.price}</div>
-                    <ul className='space-y-2'>
-                      {plan.features.map((feature) => (
-                        <li key={feature} className='flex items-center'>
-                          <CheckCircle className='mr-2 h-4 w-4 text-green-500' />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className='w-full'>Choose {plan.name}</Button>
-                  </CardFooter>
-                </Card>
-              ))}
+            <div className='mt-8 flex items-center justify-center'>
+              <Image
+                src={drEvil.src}
+                width={400}
+                height={300}
+                alt='Silly Dr. Evil One Million Dollars Meme Pose'
+              />
             </div>
           </div>
         </section>
