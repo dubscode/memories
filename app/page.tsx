@@ -1,11 +1,14 @@
 import { Calendar, Trophy, Users, Zap } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+
+import DualNotification from '@/components/captures/dual-notification';
+import PeriodicScreenshotCapture from '@/components/captures/periodic-screenshot-capture';
+import ScreenshotCapture from '@/components/captures/screenshot-capture';
 import { NewsletterSignup } from '@/components/landing/newsletter-signup';
 import { TopChallenges } from '@/components/landing/top-challenges';
-import { getTopChallenges } from '@/lib/models/challenges';
+import { Button } from '@/components/ui/button';
 import hackathonParticipants from '@/images/hackathon-users.webp';
+import { getTopChallenges } from '@/lib/models/challenges';
 
 export default async function LandingPage() {
   const challenges = await getTopChallenges();
@@ -20,16 +23,34 @@ export default async function LandingPage() {
                 Join a Hackathon, Learn, Network, and Have Fun!
               </h1>
               <p className='mx-auto max-w-[700px] text-white md:text-xl'>
-                Discover exciting challenges, showcase your skills, and connect with like-minded innovators.
+                Discover exciting challenges, showcase your skills, and connect
+                with like-minded innovators.
               </p>
             </div>
             <div className='space-x-4'>
-              <Button size="lg" className="bg-white text-primary hover:bg-gray-100">Get Started</Button>
-              <Button size="lg" variant='outline' className="text-white border-white hover:bg-white hover:text-primary">Learn More</Button>
+              <Button
+                size='lg'
+                className='bg-white text-primary hover:bg-gray-100'
+              >
+                Get Started
+              </Button>
+              <Button
+                size='lg'
+                variant='outline'
+                className='text-white border-white hover:bg-white hover:text-primary'
+              >
+                Learn More
+              </Button>
             </div>
           </div>
         </div>
       </section>
+
+      <ScreenshotCapture />
+
+      <PeriodicScreenshotCapture />
+
+      <DualNotification />
 
       <TopChallenges challenges={challenges} />
 
@@ -40,9 +61,10 @@ export default async function LandingPage() {
               <h2 className='text-3xl font-bold tracking-tighter sm:text-4xl'>
                 Why Choose Webdevathon?
               </h2>
-                <p className="text-muted-foreground">
-                We&apos;re committed to providing the best hackathon experience. Here&apos;s why participants love us:
-                </p>
+              <p className='text-muted-foreground'>
+                We&apos;re committed to providing the best hackathon experience.
+                Here&apos;s why participants love us:
+              </p>
               <ul className='space-y-2'>
                 <li className='flex items-center'>
                   <Zap className='mr-2 h-4 w-4 text-primary' />
