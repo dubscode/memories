@@ -11,10 +11,10 @@ type AppOptions = {
 };
 
 export const appOptions: AppOptions = {
-  appName: 'Starter App',
-  address: '1234 Elm St, Springfield, IL 62701',
-  supportEmail: 'help@starter.app',
-  supportPhone: '+1 (800) 555-1234',
+  appName: 'Webdevathon',
+  address: 'Portland, Oregon',
+  supportEmail: 'hi@danwise.dev',
+  supportPhone: '+1 (503) 597-8290',
   navLinks: [
     { href: '/features', label: 'Features' },
     { href: '/pricing', label: 'Pricing' },

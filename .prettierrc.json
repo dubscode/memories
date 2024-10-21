@@ -1,0 +1,18 @@
+{
+  "importOrder": [
+    "^[.css/]",
+    "^(react/(.*)$)|^(react$)",
+    "<THIRD_PARTY_MODULES>",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "jsxSingleQuote": true,
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "singleQuote": true,
+  "tabWidth": 2
+}

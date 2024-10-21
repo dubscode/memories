@@ -11,6 +11,7 @@ import { stages } from './stages';
 import { tagsChallenges } from './tags-challenges';
 import { teams } from './teams';
 import { users } from './users';
+import { z } from 'zod';
 
 export const challenges = pgTable(
   'challenges',
@@ -63,12 +64,18 @@ export const challengesRelations = relations(challenges, ({ one, many }) => ({
   teams: many(teams)
 }));
 
-export const insertChallengeSchema = createInsertSchema(challenges).omit({
+export const insertChallengeSchema = createInsertSchema(challenges, {
+  startDate: z.string(),
+  endDate: z.string()
+}).omit({
   created: true,
   updated: true
 });
 
-export const updateChallengeSchema = createInsertSchema(challenges).omit({
+export const updateChallengeSchema = createInsertSchema(challenges, {
+  startDate: z.string(),
+  endDate: z.string()
+}).omit({
   created: true,
   updated: true
 });

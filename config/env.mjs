@@ -7,8 +7,8 @@ export const env = createEnv({
    * Will throw if you access these variables on the client.
    */
   server: {
-    AWS_BEDROCK_ACCESS_KEY_ID: z.string().min(1),
-    AWS_BEDROCK_SECRET_ACCESS_KEY: z.string().min(1),
+    AZURE_OPENAI_API_KEY: z.string().min(1),
+    AZURE_RESOURCE_NAME: z.string().min(1),
     CLERK_SECRET_KEY: z.string().min(1),
     CLERK_WEBHOOK_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
@@ -31,8 +31,8 @@ export const env = createEnv({
    * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
    */
   runtimeEnv: {
-    AWS_BEDROCK_ACCESS_KEY_ID: process.env.AWS_BEDROCK_ACCESS_KEY_ID,
-    AWS_BEDROCK_SECRET_ACCESS_KEY: process.env.AWS_BEDROCK_SECRET_ACCESS_KEY,
+    AZURE_OPENAI_API_KEY: process.env.AZURE_OPENAI_API_KEY,
+    AZURE_RESOURCE_NAME: process.env.AZURE_RESOURCE_NAME,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
