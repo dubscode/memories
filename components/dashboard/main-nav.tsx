@@ -1,5 +1,4 @@
 import Link from 'next/link';
-
 import { cn } from '@/lib/utils';
 
 export function MainNav({
@@ -12,7 +11,7 @@ export function MainNav({
       {...props}
     >
       <Link
-        href='#'
+        href='/dashboard'
         className='text-sm font-medium transition-colors hover:text-primary'
       >
         Overview
@@ -34,6 +33,13 @@ export function MainNav({
         className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
       >
         Settings
+      </Link>
+      <Link
+        prefetch={true}
+        href='/admin'
+        className='text-sm font-medium transition-colors hover:text-primary'
+      >
+        Admin
       </Link>
     </nav>
   );
