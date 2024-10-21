@@ -1,6 +1,13 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import { useClerk, useUser } from '@clerk/nextjs';
+import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
+
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,14 +15,8 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useClerk, useUser } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
-
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import { Loader2 } from 'lucide-react';
 
 export function UserNav() {
   const { isLoaded, isSignedIn, user } = useUser();

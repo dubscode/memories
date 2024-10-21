@@ -1,22 +1,22 @@
 'use client';
 
+import { Trash2 } from 'lucide-react';
+
+import { deleteChallenge } from '@/app/admin/actions/delete-challenge-action';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from '@/components/ui/table';
-
-import { Button } from '@/components/ui/button';
-import { ChallengeType } from '@/lib/db/schema/challenges';
-import { Trash2 } from 'lucide-react';
-import { deleteChallenge } from '@/app/admin/actions/delete-challenge-action';
 import { useToast } from '@/hooks/use-toast';
+import { ChallengeType } from '@/lib/db/schema/challenges';
 
 export default function ChallengesTable({
-  challenges
+  challenges,
 }: {
   challenges: ChallengeType[];
 }) {
@@ -27,7 +27,7 @@ export default function ChallengesTable({
       await deleteChallenge(id);
       toast({
         title: 'Success',
-        description: 'Challenge deleted successfully'
+        description: 'Challenge deleted successfully',
       });
     } catch (error) {
       console.log(error);
@@ -38,7 +38,7 @@ export default function ChallengesTable({
       toast({
         title: 'Error',
         description,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   };

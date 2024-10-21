@@ -1,4 +1,21 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
+  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "plugins": ["check-file", "import"],
+  "rules": {
+    "prefer-template": ["error"],
+    "prefer-const": ["error"],
+    "no-var": ["error"],
+    "no-duplicate-imports": ["error"],
+    "check-file/filename-naming-convention": [
+      "error",
+      {
+        "**/*.{ts,tsx}": "KEBAB_CASE"
+      },
+      {
+        // ignore the middle extensions of the filename to support filename like bable.config.js or smoke.spec.ts
+        "ignoreMiddleExtensions": true
+      }
+    ]
+  },
   "ignorePatterns": ["components/ui/**/*"]
 }

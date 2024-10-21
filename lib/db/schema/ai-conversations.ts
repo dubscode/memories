@@ -1,9 +1,9 @@
-import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { relations, sql } from 'drizzle-orm';
-
 import { aiMessages } from './ai-messages';
-import { createInsertSchema } from 'drizzle-zod';
 import { users } from './users';
+
+import { relations, sql } from 'drizzle-orm';
+import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const aiConversations = pgTable(
   'ai_conversations',
@@ -20,40 +20,40 @@ export const aiConversations = pgTable(
     updated: timestamp('updated', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => new Date()),
   },
   (aiConversations) => ({
     userIdIndex: index('ai_conversations_user_id_idx').on(
-      aiConversations.userId
+      aiConversations.userId,
     ),
     createdIndex: index('ai_conversations_created_idx').on(
-      aiConversations.created
+      aiConversations.created,
     ),
     updatedIndex: index('ai_conversations_updated_idx').on(
-      aiConversations.updated
-    )
-  })
+      aiConversations.updated,
+    ),
+  }),
 );
 
 export const aiConversationsRelations = relations(
   aiConversations,
   ({ many }) => ({
-    messages: many(aiMessages)
-  })
+    messages: many(aiMessages),
+  }),
 );
 
 export const insertAiConversationsSchema = createInsertSchema(
-  aiConversations
+  aiConversations,
 ).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateAiConversationsSchema = createInsertSchema(
-  aiConversations
+  aiConversations,
 ).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type AiConversationType = typeof aiConversations.$inferSelect;

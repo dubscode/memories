@@ -1,5 +1,15 @@
 'use client';
 
+import { useAuth } from '@clerk/nextjs';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { formatISO, parseISO } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+import { createChallenge } from '@/app/admin/actions/create-challenge-action';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -7,59 +17,65 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from '@/components/ui/form';
-
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { createChallenge } from '@/app/admin/actions/create-challenge-action';
-import { insertChallengeSchema } from '@/lib/db/schema/challenges';
-import { useAuth } from '@clerk/nextjs';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { insertChallengeSchema } from '@/lib/db/schema/challenges';
+
+// Update the schema to expect ISO date strings
+const formSchema = insertChallengeSchema.extend({
+  startDate: z.string(),
+  endDate: z.string(),
+});
 
 export default function CreateChallengeForm() {
   const router = useRouter();
   const { userId } = useAuth();
   const { toast } = useToast();
 
-  const form = useForm({
-    resolver: zodResolver(insertChallengeSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       description: '',
       startDate: '',
       endDate: '',
       public: true,
-      organizerId: userId || ''
-    }
+      organizerId: userId || '',
+    },
   });
 
-  const onSubmit = async (data: z.infer<typeof insertChallengeSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     if (!userId) {
       toast({
         title: 'Error',
         description: 'User not authenticated',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
 
     try {
-      await createChallenge(data);
+      // Convert local datetime to UTC
+      const utcStartDate = formatISO(parseISO(data.startDate));
+      const utcEndDate = formatISO(parseISO(data.endDate));
+
+      await createChallenge({
+        ...data,
+        startDate: utcStartDate,
+        endDate: utcEndDate,
+      });
+
       toast({
         title: 'Success',
-        description: 'Challenge created successfully'
+        description: 'Challenge created successfully',
       });
       router.refresh();
       form.reset();
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       const description =
         error instanceof Error ? error.message : 'Failed to create challenge';
@@ -67,7 +83,7 @@ export default function CreateChallengeForm() {
       toast({
         title: 'Error',
         description,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   };
@@ -98,6 +114,7 @@ export default function CreateChallengeForm() {
                 <Textarea
                   placeholder='Enter challenge description'
                   {...field}
+                  value={field.value ?? ''}
                 />
               </FormControl>
               <FormMessage />
@@ -109,10 +126,13 @@ export default function CreateChallengeForm() {
           name='startDate'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Start Date</FormLabel>
+              <FormLabel>Start Date and Time</FormLabel>
               <FormControl>
-                <Input type='date' {...field} />
+                <Input type='datetime-local' {...field} />
               </FormControl>
+              <FormDescription>
+                All times are in your local timezone
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -122,10 +142,13 @@ export default function CreateChallengeForm() {
           name='endDate'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>End Date</FormLabel>
+              <FormLabel>End Date and Time</FormLabel>
               <FormControl>
-                <Input type='date' {...field} />
+                <Input type='datetime-local' {...field} />
               </FormControl>
+              <FormDescription>
+                All times are in your local timezone
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

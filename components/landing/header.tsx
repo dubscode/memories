@@ -1,11 +1,13 @@
 'use client';
 
 import { AuthButton } from '../auth/auth-button';
-import Link from 'next/link';
-import { Zap } from 'lucide-react';
-import { appOptions } from '@/config/app-options';
+
 import { useAuth } from '@clerk/nextjs';
+import { Zap } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { appOptions } from '@/config/app-options';
 
 export const Header = () => {
   const { userId } = useAuth();

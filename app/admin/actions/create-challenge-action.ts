@@ -1,11 +1,12 @@
 'use server';
 
-import { createChallenge as createChallengeModel } from '@/lib/models/challenges';
-import { insertChallengeSchema } from '@/lib/db/schema/challenges';
 import { revalidatePath } from 'next/cache';
 
+import { insertChallengeSchema } from '@/lib/db/schema/challenges';
+import { createChallenge as createChallengeModel } from '@/lib/models/challenges';
+
 export async function createChallenge(
-  data: typeof insertChallengeSchema._type
+  data: typeof insertChallengeSchema._type,
 ) {
   try {
     const newChallenge = await createChallengeModel(data);
@@ -13,7 +14,7 @@ export async function createChallenge(
     console.log(
       '%capp/admin/actions/create-challenge-action.ts:13 newChallenge',
       'color: #007acc;',
-      newChallenge
+      newChallenge,
     );
 
     if (!newChallenge || newChallenge === null) {

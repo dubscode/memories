@@ -1,14 +1,14 @@
+import { Mail, MapPin, Phone } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
-import { Mail, MapPin, Phone } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { appOptions } from '@/config/app-options';
@@ -115,20 +115,20 @@ export default function ContactPage() {
               {[
                 {
                   q: 'What are your business hours?',
-                  a: "We're available Monday to Friday, 9 AM to 5 PM PST."
+                  a: "We're available Monday to Friday, 9 AM to 5 PM PST.",
                 },
                 {
                   q: 'How long does it take to get a response?',
-                  a: 'We aim to respond to all inquiries within 24 hours.'
+                  a: 'We aim to respond to all inquiries within 24 hours.',
                 },
                 {
                   q: 'Do you offer phone support?',
-                  a: 'Yes, phone support is available for our Pro and Enterprise customers.'
+                  a: 'Yes, phone support is available for our Pro and Enterprise customers.',
                 },
                 {
                   q: 'Can I schedule a demo?',
-                  a: 'You can schedule a demo through our website or by contacting our sales team.'
-                }
+                  a: 'You can schedule a demo through our website or by contacting our sales team.',
+                },
               ].map((faq, index) => (
                 <Card key={index}>
                   <CardHeader>

@@ -1,7 +1,7 @@
-import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { relations, sql } from 'drizzle-orm';
-
 import { challenges } from './challenges';
+
+import { relations, sql } from 'drizzle-orm';
+import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
 export const resources = pgTable(
@@ -22,30 +22,30 @@ export const resources = pgTable(
     updated: timestamp('updated', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => new Date()),
   },
   (resources) => ({
     challengeIdIndex: index('resources_challenge_id_idx').on(
-      resources.challengeId
-    )
-  })
+      resources.challengeId,
+    ),
+  }),
 );
 
 export const resourcesRelations = relations(resources, ({ one }) => ({
   challenge: one(challenges, {
     fields: [resources.challengeId],
-    references: [challenges.id]
-  })
+    references: [challenges.id],
+  }),
 }));
 
 export const insertResourceSchema = createInsertSchema(resources).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateResourceSchema = createInsertSchema(resources).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type ResourceType = typeof resources.$inferSelect;

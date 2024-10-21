@@ -7,9 +7,11 @@ export { notes, notesRelations } from './notes';
 export { resources, resourcesRelations } from './resources';
 export { stages, stagesRelations } from './stages';
 export { submissions, submissionsRelations } from './submissions';
+export { tags, tagsRelations } from './tags';
 export { tagsChallenges, tagsChallengesRelations } from './tags-challenges';
 export { tagsSubmissions, tagsSubmissionsRelations } from './tags-submissions';
-export { tags, tagsRelations } from './tags';
 export { tasks, tasksRelations } from './tasks';
+export { teamMembers, teamMembersRelations } from './team-members';
 export { teams, teamsRelations } from './teams';
 export { users, usersRelations } from './users';
+

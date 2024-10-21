@@ -1,9 +1,8 @@
-import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-
 import { challenges } from './challenges';
+
+import { relations, sql } from 'drizzle-orm';
+import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-import { relations } from 'drizzle-orm';
-import { sql } from 'drizzle-orm';
 
 export const events = pgTable(
   'events',
@@ -19,11 +18,11 @@ export const events = pgTable(
     description: text('description'),
     startDate: timestamp('start_date', {
       precision: 6,
-      withTimezone: true
+      withTimezone: true,
     }).notNull(),
     endDate: timestamp('end_date', {
       precision: 6,
-      withTimezone: true
+      withTimezone: true,
     }).notNull(),
     created: timestamp('created', { precision: 6, withTimezone: true })
       .defaultNow()
@@ -31,30 +30,30 @@ export const events = pgTable(
     updated: timestamp('updated', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => new Date()),
   },
   (events) => ({
     challengeIdIndex: index('events_challenge_id_idx').on(events.challengeId),
     startDateIndex: index('events_start_date_idx').on(events.startDate),
-    endDateIndex: index('events_end_date_idx').on(events.endDate)
-  })
+    endDateIndex: index('events_end_date_idx').on(events.endDate),
+  }),
 );
 
 export const eventsRelations = relations(events, ({ one }) => ({
   challenge: one(challenges, {
     fields: [events.challengeId],
-    references: [challenges.id]
-  })
+    references: [challenges.id],
+  }),
 }));
 
 export const insertEventSchema = createInsertSchema(events).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateEventSchema = createInsertSchema(events).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type EventType = typeof events.$inferSelect;

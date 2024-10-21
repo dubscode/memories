@@ -1,20 +1,19 @@
+import { ModeToggle } from '@/components/dark-mode/mode-toggle';
+import { CalendarDateRangePicker } from '@/components/dashboard/date-range-picker';
+import { MainNav } from '@/components/dashboard/main-nav';
+import { Overview } from '@/components/dashboard/overview';
+import { RecentSales } from '@/components/dashboard/recent-sales';
+import TeamSwitcher from '@/components/dashboard/team-switcher';
+import { UserNav } from '@/components/dashboard/user-nav';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-import { Button } from '@/components/ui/button';
-import { CalendarDateRangePicker } from '@/components/dashboard/date-range-picker';
-import { MainNav } from '@/components/dashboard/main-nav';
-import { ModeToggle } from '@/components/dark-mode/mode-toggle';
-import { Overview } from '@/components/dashboard/overview';
-import { RecentSales } from '@/components/dashboard/recent-sales';
-import TeamSwitcher from '@/components/dashboard/team-switcher';
-import { UserNav } from '@/components/dashboard/user-nav';
 
 export default function DashboardPage() {
   return (
