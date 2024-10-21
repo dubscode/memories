@@ -4,6 +4,7 @@ import { fileStorage, insertFileSchema } from '@/lib/db/schema/file-storage';
 
 import { auth } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
+import { eq } from 'drizzle-orm';
 import { findByClerkId } from '@/lib/models/users';
 import { getPresignedUrls } from '@/lib/tigris-storage';
 import { z } from 'zod';
@@ -45,4 +46,53 @@ export async function getPresignedUrlAction(
   const [file] = await db.insert(fileStorage).values(fileData).returning();
 
   return { success: true, putUrl, getUrl, fileId: file.fileId, fileName };
+}
+
+export async function updateFileStatus(
+  fileId: string,
+  status: 'uploaded' | 'processing' | 'approved' | 'rejected',
+) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { success: false, error: 'User not found' };
+  }
+
+  return await db
+    .update(fileStorage)
+    .set({
+      status,
+    })
+    .where(eq(fileStorage.fileId, fileId))
+    .returning();
+}
+
+export async function getTeamScreenshots(challengeId: string, teamId: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return [];
+  }
+
+  const screenshots = await db.query.fileStorage.findMany({
+    where: (files, { eq, and }) =>
+      and(
+        eq(files.challengeId, challengeId),
+        eq(files.teamId, teamId),
+        eq(files.status, 'uploaded'),
+      ),
+    orderBy: (files, { desc }) => [desc(files.created)],
+  });
+
+  const screenshotsWithUrls = await Promise.all(
+    screenshots.map(async (screenshot) => {
+      const { getUrl } = await getPresignedUrls(screenshot.fileName);
+      return {
+        ...screenshot,
+        url: getUrl,
+      };
+    }),
+  );
+
+  return screenshotsWithUrls;
 }

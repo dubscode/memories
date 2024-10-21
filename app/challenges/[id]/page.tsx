@@ -31,7 +31,7 @@ export default async function ChallengePage({
     notFound();
   }
 
-  const { isRegistered, teamId } = await isRegisteredForChallenge(
+  const { dbUserId, isRegistered, teamId } = await isRegisteredForChallenge(
     userId,
     params.id,
   );
@@ -103,6 +103,7 @@ export default async function ChallengePage({
             <PeriodicScreenshotCapture
               challengeId={challenge.id}
               teamId={teamId}
+              userId={dbUserId}
             />
           </CardContent>
         </Card>

@@ -52,6 +52,7 @@ export async function isRegisteredForChallenge(
     return {
       isRegistered: false,
       teamId: null,
+      dbUserId: null,
     };
   }
 
@@ -63,6 +64,7 @@ export async function isRegisteredForChallenge(
     return {
       isRegistered: false,
       teamId: null,
+      dbUserId: null,
     };
   }
 
@@ -78,6 +80,7 @@ export async function isRegisteredForChallenge(
   return {
     isRegistered: !!challengeTeam,
     teamId: challengeTeam?.teamId,
+    dbUserId: dbUser.id,
   };
 }
 

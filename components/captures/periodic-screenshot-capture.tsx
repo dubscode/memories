@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/carousel';
 import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { ScreenshotWithUrl, useScreenshots } from '@/hooks/use-screenshots';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -19,26 +20,39 @@ import { getPresignedUrlAction } from '@/app/actions/get-presigned-url-action';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 
-const COUNTDOWN_SECONDS = 10;
+const COUNTDOWN_SECONDS = 60;
 
 type PeriodicScreenshotCaptureProps = {
   challengeId: string;
   teamId?: string | null;
+  userId: string | null;
 };
 
 export function PeriodicScreenshotCapture({
   challengeId,
   teamId,
+  userId,
 }: PeriodicScreenshotCaptureProps) {
   const { toast } = useToast();
   const [isCapturing, setIsCapturing] = useState(false);
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
-  const [screenshots, setScreenshots] = useState<string[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const isCapturingRef = useRef(false);
 
+  const {
+    screenshots,
+    isLoading,
+    error,
+    addScreenshot,
+    updateScreenshotStatus,
+  } = useScreenshots({
+    challengeId,
+    teamId,
+    userId,
+  });
+
   const captureScreenshot = useCallback(async () => {
-    if (!streamRef.current || isCapturingRef.current) return;
+    if (!streamRef.current || isCapturingRef.current || !teamId) return;
 
     isCapturingRef.current = true;
     console.log('Capturing screenshot...');
@@ -62,11 +76,7 @@ export function PeriodicScreenshotCapture({
         throw new Error('Failed to capture screenshot');
       }
 
-      if (!teamId) {
-        throw new Error('A team ID is required to capture screenshots');
-      }
-
-      const { putUrl, getUrl } = await getPresignedUrlAction({
+      const { putUrl, getUrl, fileId } = await getPresignedUrlAction({
         challengeId,
         teamId,
       });
@@ -88,7 +98,12 @@ export function PeriodicScreenshotCapture({
       }
 
       console.log('Screenshot uploaded successfully');
-      setScreenshots((prev) => [...prev, getUrl]);
+      await updateScreenshotStatus(fileId, 'uploaded');
+      addScreenshot({
+        fileId,
+        url: getUrl,
+        created: new Date().toISOString(),
+      } as unknown as ScreenshotWithUrl);
     } catch (error) {
       console.error('Error in captureScreenshot:', error);
       toast({
@@ -102,7 +117,7 @@ export function PeriodicScreenshotCapture({
     } finally {
       isCapturingRef.current = false;
     }
-  }, [challengeId, teamId, toast]);
+  }, [challengeId, teamId, toast, addScreenshot, updateScreenshotStatus]);
 
   const startCapturing = async () => {
     try {
@@ -149,6 +164,14 @@ export function PeriodicScreenshotCapture({
     };
   }, [isCapturing, captureScreenshot]);
 
+  if (isLoading) {
+    return <div>Loading screenshots...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <Card className='w-full'>
       <CardHeader>
@@ -188,12 +211,12 @@ export function PeriodicScreenshotCapture({
           </div>
           <div className='w-full'>
             {screenshots.length > 0 ? (
-              <Carousel className='w-full max-w-md mx-auto'>
+              <Carousel className='w-full max-w-xs mx-auto'>
                 <CarouselContent>
-                  {screenshots.map((url, index) => (
-                    <CarouselItem key={index} className='basis-1/3'>
+                  {screenshots.map((screenshot, index) => (
+                    <CarouselItem key={screenshot.fileId} className='basis-1/3'>
                       <div className='p-1'>
-                        <Card className='h-32 w-32'>
+                        <Card>
                           <CardContent className='flex aspect-square items-center justify-center p-6'>
                             <Dialog>
                               <DialogTrigger asChild>
@@ -203,7 +226,7 @@ export function PeriodicScreenshotCapture({
                                   className='relative cursor-pointer group'
                                 >
                                   <Image
-                                    src={url}
+                                    src={screenshot.url}
                                     alt={`Screenshot ${index + 1}`}
                                     width={300}
                                     height={300}
@@ -216,7 +239,7 @@ export function PeriodicScreenshotCapture({
                               </DialogTrigger>
                               <DialogContent className='max-w-3xl w-full p-0'>
                                 <Image
-                                  src={url}
+                                  src={screenshot.url}
                                   alt={`Full size screenshot ${index + 1}`}
                                   width={1920}
                                   height={1080}
