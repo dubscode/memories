@@ -4,7 +4,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
 
 export default function AboutPage() {
@@ -61,23 +61,23 @@ export default function AboutPage() {
             {
               name: 'John Doe',
               role: 'CEO',
-              image: '/placeholder.svg?height=100&width=100'
+              image: '/placeholder.svg?height=100&width=100',
             },
             {
               name: 'Jane Smith',
               role: 'CTO',
-              image: '/placeholder.svg?height=100&width=100'
+              image: '/placeholder.svg?height=100&width=100',
             },
             {
               name: 'Mike Johnson',
               role: 'Lead Developer',
-              image: '/placeholder.svg?height=100&width=100'
+              image: '/placeholder.svg?height=100&width=100',
             },
             {
               name: 'Sarah Brown',
               role: 'UX Designer',
-              image: '/placeholder.svg?height=100&width=100'
-            }
+              image: '/placeholder.svg?height=100&width=100',
+            },
           ].map((member) => (
             <Card key={member.name}>
               <CardContent className='pt-6'>

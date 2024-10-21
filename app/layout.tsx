@@ -1,20 +1,20 @@
-import '@/config/globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import { appOptions, geistMono, geistSans } from '@/config/app-options';
+import type { Metadata } from 'next';
 
+import { ThemeProvider } from '@/components/dark-mode/theme-provider';
 import { Footer } from '@/components/landing/footer';
 import { Header } from '@/components/landing/header';
-import type { Metadata } from 'next';
-import { ThemeProvider } from '@/components/dark-mode/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { appOptions, geistMono, geistSans } from '@/config/app-options';
+import '@/config/globals.css';
 
 export const metadata: Metadata = {
   title: `${appOptions.appName}`,
-  description: 'Hit the ground running with this starter app.'
+  description: 'Hit the ground running with this starter app.',
 };
 
 export default async function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {

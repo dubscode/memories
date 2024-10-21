@@ -1,9 +1,10 @@
 'use server';
 
-import { challenges } from '@/lib/db/schema/challenges';
-import { db } from '@/lib/db';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+
+import { db } from '@/lib/db';
+import { challenges } from '@/lib/db/schema/challenges';
 
 export async function deleteChallenge(id: string) {
   try {

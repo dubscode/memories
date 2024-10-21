@@ -1,9 +1,9 @@
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { relations, sql } from 'drizzle-orm';
-
-import { createInsertSchema } from 'drizzle-zod';
 import { tagsChallenges } from './tags-challenges';
 import { tagsSubmissions } from './tags-submissions';
+
+import { relations, sql } from 'drizzle-orm';
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const tags = pgTable('tags', {
   tagId: text('tag_id')
@@ -18,26 +18,26 @@ export const tags = pgTable('tags', {
   updated: timestamp('updated', { precision: 6, withTimezone: true })
     .defaultNow()
     .notNull()
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => new Date()),
 });
 
 export const tagsRelations = relations(tags, ({ many }) => ({
   challengeTags: many(tagsChallenges),
-  submissionTags: many(tagsSubmissions)
+  submissionTags: many(tagsSubmissions),
 }));
 
 export const insertTagSchema = createInsertSchema(tags, {
-  name: (schema) => schema.name.trim().toLowerCase()
+  name: (schema) => schema.name.trim().toLowerCase(),
 }).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateTagSchema = createInsertSchema(tags, {
-  name: (schema) => schema.name.trim().toLowerCase()
+  name: (schema) => schema.name.trim().toLowerCase(),
 }).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type TagType = typeof tags.$inferSelect;

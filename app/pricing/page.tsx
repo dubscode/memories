@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
 import Image from 'next/image';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import drEvil from '@/images/one-hundred-million.jpg';
 
 export default function PricingPage() {
@@ -46,20 +46,20 @@ export default function PricingPage() {
               {[
                 {
                   q: 'Can I change plans later?',
-                  a: 'Yes, you can upgrade or downgrade your plan at any time.'
+                  a: 'Yes, you can upgrade or downgrade your plan at any time.',
                 },
                 {
                   q: 'Is there a free trial?',
-                  a: 'We offer a 14-day free trial for all our plans.'
+                  a: 'We offer a 14-day free trial for all our plans.',
                 },
                 {
                   q: 'What payment methods do you accept?',
-                  a: 'We accept all major credit cards and PayPal.'
+                  a: 'We accept all major credit cards and PayPal.',
                 },
                 {
                   q: 'Is there a setup fee?',
-                  a: 'No, there are no setup fees for any of our plans.'
-                }
+                  a: 'No, there are no setup fees for any of our plans.',
+                },
               ].map((faq, index) => (
                 <Card key={index}>
                   <CardHeader>

@@ -1,8 +1,7 @@
 import 'dotenv/config';
+import { sql } from 'drizzle-orm';
 
 import { dbMigrations, migrationClient } from '@/lib/db';
-
-import { sql } from 'drizzle-orm';
 
 async function main() {
   const db = dbMigrations;
@@ -14,7 +13,7 @@ async function main() {
   await db.execute(sql.raw(`GRANT ALL ON SCHEMA public TO postgres;`));
   await db.execute(sql.raw(`GRANT ALL ON SCHEMA public TO public;`));
   await db.execute(
-    sql.raw(`COMMENT ON SCHEMA public IS 'standard public schema';`)
+    sql.raw(`COMMENT ON SCHEMA public IS 'standard public schema';`),
   );
 
   await migrationClient.end();

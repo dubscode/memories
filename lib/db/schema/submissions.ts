@@ -1,16 +1,16 @@
+import { challenges } from './challenges';
+import { teams } from './teams';
+import { users } from './users';
+
+import { relations, sql } from 'drizzle-orm';
 import {
   index,
   pgTable,
   text,
   timestamp,
-  uniqueIndex
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { relations, sql } from 'drizzle-orm';
-
-import { challenges } from './challenges';
 import { createInsertSchema } from 'drizzle-zod';
-import { teams } from './teams';
-import { users } from './users';
 
 // Submissions Table
 export const submissions = pgTable(
@@ -38,38 +38,38 @@ export const submissions = pgTable(
     updated: timestamp('updated', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => new Date()),
   },
   (submissions) => ({
     challengeIdIndex: index('submissions_challenge_id_idx').on(
-      submissions.challengeId
+      submissions.challengeId,
     ),
     teamIdIndex: index('submissions_team_id_idx').on(submissions.teamId),
     userIdIndex: index('submissions_user_id_idx').on(submissions.userId),
     uniqueChallengeTeamIndex: uniqueIndex(
-      'submissions_challenge_team_unique'
-    ).on(submissions.challengeId, submissions.teamId)
-  })
+      'submissions_challenge_team_unique',
+    ).on(submissions.challengeId, submissions.teamId),
+  }),
 );
 
 export const submissionsRelations = relations(submissions, ({ many, one }) => ({
   challenge: one(challenges, {
     fields: [submissions.challengeId],
-    references: [challenges.id]
+    references: [challenges.id],
   }),
   tags: many(submissions),
   team: one(teams, { fields: [submissions.teamId], references: [teams.id] }),
-  user: one(users, { fields: [submissions.userId], references: [users.id] })
+  user: one(users, { fields: [submissions.userId], references: [users.id] }),
 }));
 
 export const insertSubmissionSchema = createInsertSchema(submissions).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateSubmissionSchema = createInsertSchema(submissions).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type SubmissionType = typeof submissions.$inferSelect;

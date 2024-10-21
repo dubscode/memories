@@ -1,14 +1,14 @@
+import { submissions } from './submissions';
+import { tags } from './tags';
+
+import { relations } from 'drizzle-orm';
 import {
   index,
   pgTable,
   primaryKey,
   text,
-  timestamp
+  timestamp,
 } from 'drizzle-orm/pg-core';
-
-import { relations } from 'drizzle-orm';
-import { submissions } from './submissions';
-import { tags } from './tags';
 
 export const tagsSubmissions = pgTable(
   'tags_submissions',
@@ -25,17 +25,17 @@ export const tagsSubmissions = pgTable(
     updated: timestamp('updated', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => new Date()),
   },
   (tagsSubmissions) => ({
     pk: primaryKey({
-      columns: [tagsSubmissions.submissionId, tagsSubmissions.tagId]
+      columns: [tagsSubmissions.submissionId, tagsSubmissions.tagId],
     }),
     submissionIdIndex: index('tags_submissions_submission_id_idx').on(
-      tagsSubmissions.submissionId
+      tagsSubmissions.submissionId,
     ),
-    tagIdIndex: index('tags_submissions_tag_id_idx').on(tagsSubmissions.tagId)
-  })
+    tagIdIndex: index('tags_submissions_tag_id_idx').on(tagsSubmissions.tagId),
+  }),
 );
 
 export const tagsSubmissionsRelations = relations(
@@ -43,13 +43,13 @@ export const tagsSubmissionsRelations = relations(
   ({ one }) => ({
     submission: one(submissions, {
       fields: [tagsSubmissions.submissionId],
-      references: [submissions.id]
+      references: [submissions.id],
     }),
     tag: one(tags, {
       fields: [tagsSubmissions.tagId],
-      references: [tags.tagId]
-    })
-  })
+      references: [tags.tagId],
+    }),
+  }),
 );
 
 export type SubmissionTagType = typeof tagsSubmissions.$inferSelect;

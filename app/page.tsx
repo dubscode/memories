@@ -1,8 +1,8 @@
 import { ArrowRight, BarChart, CheckCircle, Shield, Zap } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
 export default function LandingPage() {
@@ -109,7 +109,7 @@ export default function LandingPage() {
                 src='https://placehold.co/600x400/png'
                 style={{
                   aspectRatio: '600/400',
-                  objectFit: 'cover'
+                  objectFit: 'cover',
                 }}
                 width='600'
               />

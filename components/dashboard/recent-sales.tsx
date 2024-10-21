@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
 import avatarImg from '@/images/placeholder-avatar.jpg';
 
 export function RecentSales() {

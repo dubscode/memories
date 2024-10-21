@@ -1,14 +1,13 @@
-import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
-
 import { challenges } from './challenges';
-import { createInsertSchema } from 'drizzle-zod';
 import { fileStorage } from './file-storage';
 import { notes } from './notes';
-import { relations } from 'drizzle-orm';
-import { sql } from 'drizzle-orm';
 import { submissions } from './submissions';
 import { tasks } from './tasks';
 import { teams } from './teams';
+
+import { relations, sql } from 'drizzle-orm';
+import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const users = pgTable('users', {
   id: text('id')
@@ -26,7 +25,7 @@ export const users = pgTable('users', {
   updated: timestamp('updated', { precision: 6, withTimezone: true })
     .defaultNow()
     .notNull()
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => new Date()),
 });
 
 export const usersRelations = relations(users, ({ many, one }) => ({
@@ -35,25 +34,25 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   notes: many(notes),
   submission: one(submissions, {
     fields: [users.id],
-    references: [submissions.userId]
+    references: [submissions.userId],
   }),
   tasks: many(tasks),
-  teams: many(teams)
+  teams: many(teams),
 }));
 
 export const insertUserSchema = createInsertSchema(users, {
-  email: (schema) => schema.email.trim().toLowerCase()
+  email: (schema) => schema.email.trim().toLowerCase(),
 }).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateUserSchema = createInsertSchema(users, {
   clerkId: (schema) => schema.clerkId.optional(),
-  email: (schema) => schema.email.trim().toLowerCase().optional()
+  email: (schema) => schema.email.trim().toLowerCase().optional(),
 }).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type UserType = typeof users.$inferSelect;

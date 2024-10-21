@@ -2,27 +2,27 @@
 const nextConfig = {
   output: 'standalone',
   experimental: {
-    typedRoutes: true
+    typedRoutes: true,
   },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'placehold.co',
-        port: ''
+        port: '',
       },
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
-        port: ''
+        port: '',
       },
       {
         protocol: 'https',
         hostname: 'img.clerk.com',
-        port: ''
-      }
-    ]
-  }
+        port: '',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

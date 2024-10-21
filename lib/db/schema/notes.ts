@@ -1,12 +1,11 @@
-import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-
 import { challenges } from './challenges';
-import { createInsertSchema } from 'drizzle-zod';
-import { relations } from 'drizzle-orm';
-import { sql } from 'drizzle-orm';
 import { stages } from './stages';
 import { teams } from './teams';
 import { users } from './users';
+
+import { relations, sql } from 'drizzle-orm';
+import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const notes = pgTable(
   'notes',
@@ -28,34 +27,34 @@ export const notes = pgTable(
     updated: timestamp('updated', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => new Date()),
   },
   (notes) => ({
     challengeIdIndex: index('notes_challenge_id_idx').on(notes.challengeId),
     stageIdIndex: index('notes_stage_id_idx').on(notes.stageId),
     teamIdIndex: index('notes_team_id_idx').on(notes.teamId),
-    authorIdIndex: index('notes_author_id_idx').on(notes.authorId)
-  })
+    authorIdIndex: index('notes_author_id_idx').on(notes.authorId),
+  }),
 );
 
 export const notesRelations = relations(notes, ({ one }) => ({
   challenge: one(challenges, {
     fields: [notes.challengeId],
-    references: [challenges.id]
+    references: [challenges.id],
   }),
   stage: one(stages, { fields: [notes.stageId], references: [stages.id] }),
   team: one(teams, { fields: [notes.teamId], references: [teams.id] }),
-  author: one(users, { fields: [notes.authorId], references: [users.id] })
+  author: one(users, { fields: [notes.authorId], references: [users.id] }),
 }));
 
 export const insertNoteSchema = createInsertSchema(notes).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateNoteSchema = createInsertSchema(notes).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type NoteType = typeof notes.$inferSelect;

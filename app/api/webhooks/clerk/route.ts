@@ -1,8 +1,10 @@
 import { Webhook } from 'svix';
+
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { createUser, updateUser } from '@/lib/models/users';
-import { env } from '@/config/env.mjs';
 import { headers } from 'next/headers';
+
+import { env } from '@/config/env.mjs';
+import { createUser, updateUser } from '@/lib/models/users';
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -10,7 +12,7 @@ export async function POST(req: Request) {
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
-      'Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local'
+      'Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local',
     );
   }
 
@@ -23,7 +25,7 @@ export async function POST(req: Request) {
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return new Response('Error occured -- no svix headers', {
-      status: 400
+      status: 400,
     });
   }
 
@@ -41,12 +43,12 @@ export async function POST(req: Request) {
     evt = wh.verify(body, {
       'svix-id': svix_id,
       'svix-timestamp': svix_timestamp,
-      'svix-signature': svix_signature
+      'svix-signature': svix_signature,
     }) as WebhookEvent;
   } catch (err) {
     console.error('Error verifying webhook:', err);
     return new Response('Error occured', {
-      status: 400
+      status: 400,
     });
   }
 
@@ -61,7 +63,7 @@ export async function POST(req: Request) {
     console.log('userId:', evt.data.id);
 
     const preferredEmail = evt.data.email_addresses.find(
-      (e) => e.id === evt.data.primary_email_address_id
+      (e) => e.id === evt.data.primary_email_address_id,
     )?.email_address;
 
     if (!preferredEmail) {
@@ -74,13 +76,13 @@ export async function POST(req: Request) {
       clerkId: evt.data.id,
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
-      profileImageUrl: evt.data.image_url
+      profileImageUrl: evt.data.image_url,
     });
 
     console.log('User saved to database:', dbUser);
   } else if (evt.type === 'user.updated') {
     const preferredEmail = evt.data.email_addresses.find(
-      (e) => e.id === evt.data.primary_email_address_id
+      (e) => e.id === evt.data.primary_email_address_id,
     )?.email_address;
 
     if (!preferredEmail) {
@@ -93,7 +95,7 @@ export async function POST(req: Request) {
       clerkId: evt.data.id,
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
-      profileImageUrl: evt.data.image_url
+      profileImageUrl: evt.data.image_url,
     });
 
     console.log('User updated to database:', dbUser);

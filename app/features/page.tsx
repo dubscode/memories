@@ -1,41 +1,42 @@
+import { CheckCircle, XCircle } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
-import { CheckCircle, XCircle } from 'lucide-react';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from '@/components/ui/table';
-
-import { Button } from '@/components/ui/button';
 
 export default function FeaturesPage() {
   const features = [
     {
       name: 'Automated Workflows',
-      description: 'Streamline your processes with our intelligent automation.'
+      description: 'Streamline your processes with our intelligent automation.',
     },
     {
       name: 'Real-time Analytics',
-      description: 'Gain insights with our powerful, real-time data analytics.'
+      description: 'Gain insights with our powerful, real-time data analytics.',
     },
     {
       name: 'Secure Cloud Storage',
       description:
-        'Keep your data safe and accessible with our secure cloud solution.'
+        'Keep your data safe and accessible with our secure cloud solution.',
     },
     {
       name: '24/7 Customer Support',
-      description: 'Get help anytime with our round-the-clock customer support.'
-    }
+      description:
+        'Get help anytime with our round-the-clock customer support.',
+    },
   ];
 
   const plans = [
@@ -45,8 +46,8 @@ export default function FeaturesPage() {
       features: [
         'Automated Workflows',
         'Real-time Analytics',
-        'Secure Cloud Storage'
-      ]
+        'Secure Cloud Storage',
+      ],
     },
     {
       name: 'Enterprise',
@@ -54,9 +55,9 @@ export default function FeaturesPage() {
         'Automated Workflows',
         'Real-time Analytics',
         'Secure Cloud Storage',
-        '24/7 Customer Support'
-      ]
-    }
+        '24/7 Customer Support',
+      ],
+    },
   ];
 
   return (

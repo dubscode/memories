@@ -1,11 +1,10 @@
-import { index, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-
 import { challenges } from './challenges';
-import { createInsertSchema } from 'drizzle-zod';
 import { notes } from './notes';
-import { relations } from 'drizzle-orm';
-import { sql } from 'drizzle-orm';
 import { tasks } from './tasks';
+
+import { relations, sql } from 'drizzle-orm';
+import { index, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const stages = pgTable(
   'stages',
@@ -27,31 +26,31 @@ export const stages = pgTable(
     updated: timestamp('updated', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull()
-      .$onUpdate(() => new Date())
+      .$onUpdate(() => new Date()),
   },
   (stages) => ({
     challengeIdIndex: index('stages_challenge_id_idx').on(stages.challengeId),
-    orderIndex: index('stages_order_idx').on(stages.order)
-  })
+    orderIndex: index('stages_order_idx').on(stages.order),
+  }),
 );
 
 export const stagesRelations = relations(stages, ({ many, one }) => ({
   challenge: one(challenges, {
     fields: [stages.challengeId],
-    references: [challenges.id]
+    references: [challenges.id],
   }),
   notes: many(notes),
-  tasks: many(tasks)
+  tasks: many(tasks),
 }));
 
 export const insertStageSchema = createInsertSchema(stages).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export const updateStageSchema = createInsertSchema(stages).omit({
   created: true,
-  updated: true
+  updated: true,
 });
 
 export type StageType = typeof stages.$inferSelect;

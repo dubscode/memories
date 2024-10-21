@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import { appOptions } from '@/config/app-options';
 
 export const Footer = () => {
