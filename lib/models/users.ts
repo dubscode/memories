@@ -1,10 +1,10 @@
-import { eq } from 'drizzle-orm';
-import _ from 'lodash';
-import { z } from 'zod';
-
-import { db } from '@/lib/db';
-import { users } from '@/lib/db/schema';
 import { insertUserSchema, updateUserSchema } from '@/lib/db/schema/users';
+import { teamMembers, users } from '@/lib/db/schema';
+
+import _ from 'lodash';
+import { db } from '@/lib/db';
+import { eq } from 'drizzle-orm';
+import { z } from 'zod';
 
 export async function createUser(input: z.input<typeof insertUserSchema>) {
   const [newUser] = await db.insert(users).values(input).returning();
@@ -14,6 +14,33 @@ export async function createUser(input: z.input<typeof insertUserSchema>) {
 
 export async function findById(id: string) {
   return await db.query.users.findFirst({ where: eq(users.id, id) });
+}
+
+export async function isRegisteredForChallenge(
+  userId: string | null,
+  challengeId: string,
+) {
+  if (!userId) {
+    return false;
+  }
+
+  const dbUser = await db.query.users.findFirst({
+    where: eq(users.clerkId, userId),
+  });
+
+  if (!dbUser) {
+    return false;
+  }
+
+  const userTeams = await db.query.teamMembers.findMany({
+    where: eq(teamMembers.userId, dbUser.id),
+    with: { team: true },
+  });
+
+  return (
+    userTeams.some((userTeam) => userTeam.team.challengeId === challengeId) ??
+    false
+  );
 }
 
 export async function listUsers() {

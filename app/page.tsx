@@ -1,14 +1,10 @@
 import { Calendar, Trophy, Users, Zap } from 'lucide-react';
-import Image from 'next/image';
 
-import DualNotification from '@/components/captures/dual-notification';
-import PeriodicScreenshotCapture from '@/components/captures/periodic-screenshot-capture';
-import ScreenshotCapture from '@/components/captures/screenshot-capture';
+import Image from 'next/image';
 import { NewsletterSignup } from '@/components/landing/newsletter-signup';
 import { TopChallenges } from '@/components/landing/top-challenges';
-import { Button } from '@/components/ui/button';
-import hackathonParticipants from '@/images/hackathon-users.webp';
 import { getTopChallenges } from '@/lib/models/challenges';
+import hackathonParticipants from '@/images/hackathon-users.webp';
 
 export default async function LandingPage() {
   const challenges = await getTopChallenges();
@@ -20,37 +16,22 @@ export default async function LandingPage() {
           <div className='flex flex-col items-center space-y-4 text-center'>
             <div className='space-y-2'>
               <h1 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-white'>
-                Join a Hackathon, Learn, Network, and Have Fun!
+                Join a Hackathon, Learn, Network, and Create Memories!
               </h1>
               <p className='mx-auto max-w-[700px] text-white md:text-xl'>
                 Discover exciting challenges, showcase your skills, and connect
                 with like-minded innovators.
               </p>
             </div>
-            <div className='space-x-4'>
-              <Button
-                size='lg'
-                className='bg-white text-primary hover:bg-gray-100'
-              >
-                Get Started
-              </Button>
-              <Button
-                size='lg'
-                variant='outline'
-                className='text-white border-white hover:bg-white hover:text-primary'
-              >
-                Learn More
-              </Button>
-            </div>
           </div>
         </div>
       </section>
 
-      <ScreenshotCapture />
+      {/* <ScreenshotCapture />
 
       <PeriodicScreenshotCapture />
 
-      <DualNotification />
+      <DualNotification /> */}
 
       <TopChallenges challenges={challenges} />
 

@@ -18,10 +18,10 @@ export const appOptions: AppOptions = {
   supportEmail: 'hi@danwise.dev',
   supportPhone: '+1 (503) 597-8290',
   navLinks: [
-    { href: '/features', label: 'Features' },
-    { href: '/pricing', label: 'Pricing' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
+    // { href: '/features', label: 'Features' },
+    // { href: '/pricing', label: 'Pricing' },
+    // { href: '/about', label: 'About' },
+    // { href: '/contact', label: 'Contact' },
   ],
 };
 

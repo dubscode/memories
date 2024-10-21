@@ -1,8 +1,6 @@
-import { auth } from '@clerk/nextjs/server';
-
 import ChallengesTable from '@/components/admin/challenges-table';
 import CreateChallengeForm from '@/components/admin/create-challenge-form';
-import UpcomingChallengesCalendar from '@/components/admin/upcoming-challenges-calendar';
+import { auth } from '@clerk/nextjs/server';
 import { getChallengesByOrganizer } from '@/lib/models/challenges';
 
 export default async function AdminPage() {
@@ -18,10 +16,6 @@ export default async function AdminPage() {
       <div>
         <h2 className='mb-4 text-xl font-semibold'>Create New Challenge</h2>
         <CreateChallengeForm />
-      </div>
-      <div>
-        <h2 className='mb-4 text-xl font-semibold'>Upcoming Challenges</h2>
-        <UpcomingChallengesCalendar challenges={challenges} />
       </div>
     </div>
   );

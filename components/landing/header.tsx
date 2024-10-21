@@ -1,13 +1,12 @@
 'use client';
 
 import { AuthButton } from '../auth/auth-button';
-
-import { useAuth } from '@clerk/nextjs';
-import { Zap } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
+import { ModeToggle } from '@/components/dark-mode/mode-toggle';
+import { Zap } from 'lucide-react';
 import { appOptions } from '@/config/app-options';
+import { useAuth } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
 
 export const Header = () => {
   const { userId } = useAuth();
@@ -24,7 +23,7 @@ export const Header = () => {
         <span className='ml-2 font-bold'>{appOptions.appName}</span>
       </Link>
       <nav className='flex gap-4 sm:gap-6'>
-        {userId ? (
+        {userId && (
           <>
             <Link
               className='text-sm font-medium underline-offset-4 hover:underline'
@@ -32,15 +31,8 @@ export const Header = () => {
             >
               Admin
             </Link>
-            <Link
-              className='text-sm font-medium underline-offset-4 hover:underline'
-              href='/dashboard'
-            >
-              Dashboard
-            </Link>
           </>
-        ) : null}
-
+        )}
         {appOptions.navLinks.map((link, idx) => (
           <Link
             key={idx}
@@ -51,8 +43,10 @@ export const Header = () => {
           </Link>
         ))}
       </nav>
-
-      <AuthButton />
+      <div className='flex items-center gap-4'>
+        <ModeToggle />
+        <AuthButton />
+      </div>
     </header>
   );
 };
