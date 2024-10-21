@@ -49,7 +49,10 @@ export async function isRegisteredForChallenge(
   challengeId: string,
 ) {
   if (!userId) {
-    return false;
+    return {
+      isRegistered: false,
+      teamId: null,
+    };
   }
 
   const dbUser = await db.query.users.findFirst({
@@ -57,7 +60,10 @@ export async function isRegisteredForChallenge(
   });
 
   if (!dbUser) {
-    return false;
+    return {
+      isRegistered: false,
+      teamId: null,
+    };
   }
 
   const userTeams = await db.query.teamMembers.findMany({
@@ -65,10 +71,14 @@ export async function isRegisteredForChallenge(
     with: { team: true },
   });
 
-  return (
-    userTeams.some((userTeam) => userTeam.team.challengeId === challengeId) ??
-    false
+  const challengeTeam = userTeams.find(
+    (userTeam) => userTeam.team.challengeId === challengeId,
   );
+
+  return {
+    isRegistered: !!challengeTeam,
+    teamId: challengeTeam?.teamId,
+  };
 }
 
 export async function listUsers() {

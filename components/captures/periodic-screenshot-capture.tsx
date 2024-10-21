@@ -1,34 +1,108 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEffect, useRef, useState } from 'react';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Progress } from '@/components/ui/progress';
+import { getPresignedUrlAction } from '@/app/actions/get-presigned-url-action';
+import { motion } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
-export default function PeriodicScreenshotCapture() {
+const COUNTDOWN_SECONDS = 10;
+
+type PeriodicScreenshotCaptureProps = {
+  challengeId: string;
+  teamId?: string | null;
+};
+
+export function PeriodicScreenshotCapture({
+  challengeId,
+  teamId,
+}: PeriodicScreenshotCaptureProps) {
+  const { toast } = useToast();
   const [isCapturing, setIsCapturing] = useState(false);
-  const [countdown, setCountdown] = useState(5); // 5 minutes in seconds
+  const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
   const [screenshots, setScreenshots] = useState<string[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
+  const isCapturingRef = useRef(false);
 
-  const captureScreenshot = async () => {
-    if (!streamRef.current) return;
+  const captureScreenshot = useCallback(async () => {
+    if (!streamRef.current || isCapturingRef.current) return;
 
-    const video = document.createElement('video');
-    video.srcObject = streamRef.current;
-    await new Promise((resolve) => (video.onloadedmetadata = resolve));
-    video.play();
+    isCapturingRef.current = true;
+    console.log('Capturing screenshot...');
 
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')?.drawImage(video, 0, 0);
+    try {
+      const video = document.createElement('video');
+      video.srcObject = streamRef.current;
+      await new Promise((resolve) => (video.onloadedmetadata = resolve));
+      video.play();
 
-    const screenshotDataUrl = canvas.toDataURL('image/png');
-    setScreenshots((prev) => [...prev, screenshotDataUrl]);
-  };
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d')?.drawImage(video, 0, 0);
+
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob((blob) => resolve(blob), 'image/png'),
+      );
+
+      if (!blob) {
+        throw new Error('Failed to capture screenshot');
+      }
+
+      if (!teamId) {
+        throw new Error('A team ID is required to capture screenshots');
+      }
+
+      const { putUrl, getUrl } = await getPresignedUrlAction({
+        challengeId,
+        teamId,
+      });
+
+      if (!putUrl) {
+        throw new Error('Failed to get presigned URL');
+      }
+
+      const response = await fetch(putUrl, {
+        method: 'PUT',
+        body: blob,
+        headers: {
+          'Content-Type': 'image/png',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Screenshot uploaded successfully');
+      setScreenshots((prev) => [...prev, getUrl]);
+    } catch (error) {
+      console.error('Error in captureScreenshot:', error);
+      toast({
+        title: 'Error',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Failed to capture or upload screenshot',
+        variant: 'destructive',
+      });
+    } finally {
+      isCapturingRef.current = false;
+    }
+  }, [challengeId, teamId, toast]);
 
   const startCapturing = async () => {
     try {
@@ -39,6 +113,11 @@ export default function PeriodicScreenshotCapture() {
       setIsCapturing(true);
     } catch (error) {
       console.error('Error starting screen capture:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to start screen capture',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -47,7 +126,7 @@ export default function PeriodicScreenshotCapture() {
       streamRef.current.getTracks().forEach((track) => track.stop());
     }
     setIsCapturing(false);
-    setCountdown(5);
+    setCountdown(COUNTDOWN_SECONDS);
   };
 
   useEffect(() => {
@@ -58,7 +137,7 @@ export default function PeriodicScreenshotCapture() {
         setCountdown((prev) => {
           if (prev <= 1) {
             captureScreenshot();
-            return 5; // Reset to 5 minutes
+            return COUNTDOWN_SECONDS;
           }
           return prev - 1;
         });
@@ -68,38 +147,102 @@ export default function PeriodicScreenshotCapture() {
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isCapturing]);
+  }, [isCapturing, captureScreenshot]);
 
   return (
-    <Card className='w-full max-w-md'>
+    <Card className='w-full'>
       <CardHeader>
         <CardTitle>Periodic Screenshot Capture</CardTitle>
       </CardHeader>
-      <CardContent className='space-y-4'>
-        {isCapturing ? (
-          <>
-            <div className='text-center'>
-              Next screenshot in: {Math.floor(countdown / 60)}:
-              {(countdown % 60).toString().padStart(2, '0')}
+      <CardContent>
+        <div className='grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4'>
+          <div className='space-y-4'>
+            {isCapturing ? (
+              <>
+                <div className='text-center text-sm'>
+                  Next in: {Math.floor(countdown / 60)}:
+                  {(countdown % 60).toString().padStart(2, '0')}
+                </div>
+                <Progress
+                  value={
+                    ((COUNTDOWN_SECONDS - countdown) / COUNTDOWN_SECONDS) * 100
+                  }
+                  className='w-full'
+                />
+                <Button
+                  onClick={stopCapturing}
+                  variant='destructive'
+                  className='w-full'
+                >
+                  Stop
+                </Button>
+              </>
+            ) : (
+              <Button onClick={startCapturing} className='w-full'>
+                Start Capturing
+              </Button>
+            )}
+            <div className='text-sm text-center'>
+              Total: {screenshots.length}
             </div>
-            <Progress value={(5 - countdown) / 3} />
-            <Button onClick={stopCapturing} variant='destructive'>
-              Stop Capturing
-            </Button>
-          </>
-        ) : (
-          <Button onClick={startCapturing}>Start Capturing</Button>
-        )}
-        <div>Total screenshots: {screenshots.length}</div>
-        <div className='grid grid-cols-2 gap-2'>
-          {screenshots.slice(-4).map((screenshot, index) => (
-            <Image
-              key={index}
-              src={screenshot}
-              alt={`Screenshot ${index + 1}`}
-              className='w-full'
-            />
-          ))}
+          </div>
+          <div className='w-full'>
+            {screenshots.length > 0 ? (
+              <Carousel className='w-full max-w-md mx-auto'>
+                <CarouselContent>
+                  {screenshots.map((url, index) => (
+                    <CarouselItem key={index} className='basis-1/3'>
+                      <div className='p-1'>
+                        <Card className='h-32 w-32'>
+                          <CardContent className='flex aspect-square items-center justify-center p-6'>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <motion.div
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  className='relative cursor-pointer group'
+                                >
+                                  <Image
+                                    src={url}
+                                    alt={`Screenshot ${index + 1}`}
+                                    width={300}
+                                    height={300}
+                                    className='rounded-lg object-cover'
+                                  />
+                                  <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                                    <Expand className='text-white w-10 h-10' />
+                                  </div>
+                                </motion.div>
+                              </DialogTrigger>
+                              <DialogContent className='max-w-3xl w-full p-0'>
+                                <Image
+                                  src={url}
+                                  alt={`Full size screenshot ${index + 1}`}
+                                  width={1920}
+                                  height={1080}
+                                  className='w-full h-auto'
+                                />
+                              </DialogContent>
+                            </Dialog>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className='hidden md:flex'>
+                  <ChevronLeft className='w-6 h-6' />
+                </CarouselPrevious>
+                <CarouselNext className='hidden md:flex'>
+                  <ChevronRight className='w-6 h-6' />
+                </CarouselNext>
+              </Carousel>
+            ) : (
+              <div className='text-center text-muted-foreground'>
+                No screenshots captured yet.
+              </div>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

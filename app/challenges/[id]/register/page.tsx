@@ -22,7 +22,7 @@ export default async function ChallengeRegistrationPage({
     redirect('/challenges');
   }
 
-  const isRegistered = await isRegisteredForChallenge(userId, params.id);
+  const { isRegistered } = await isRegisteredForChallenge(userId, params.id);
 
   if (isRegistered) {
     redirect(`/challenges/${params.id}`);

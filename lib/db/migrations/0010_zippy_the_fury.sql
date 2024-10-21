@@ -1,0 +1,1 @@
+ALTER TABLE "file_storage" ADD COLUMN "status" text DEFAULT 'processing' NOT NULL;

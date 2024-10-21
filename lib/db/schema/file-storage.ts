@@ -1,10 +1,10 @@
+import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
+
 import { challenges } from './challenges';
+import { createInsertSchema } from 'drizzle-zod';
 import { teams } from './teams';
 import { users } from './users';
-
-import { relations, sql } from 'drizzle-orm';
-import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
 
 export const fileStorage = pgTable(
   'file_storage',
@@ -19,6 +19,7 @@ export const fileStorage = pgTable(
     fileName: text('file_name').notNull(),
     bucketName: text('bucket_name').notNull(),
     fileType: text('file_type').notNull(), // "image", "video", "document", etc.
+    status: text('status').notNull().default('processing'), // "uploaded", "processing", "approved", "rejected"
     created: timestamp('created', { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull(),

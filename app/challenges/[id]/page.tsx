@@ -11,6 +11,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { PeriodicScreenshotCapture } from '@/components/captures/periodic-screenshot-capture';
 import { auth } from '@clerk/nextjs/server';
 import { format } from 'date-fns';
 import { getChallengeDetails } from '@/lib/models/challenges';
@@ -30,7 +31,10 @@ export default async function ChallengePage({
     notFound();
   }
 
-  const isRegistered = await isRegisteredForChallenge(userId, params.id);
+  const { isRegistered, teamId } = await isRegisteredForChallenge(
+    userId,
+    params.id,
+  );
 
   return (
     <div className='container mx-auto py-10'>
@@ -86,6 +90,23 @@ export default async function ChallengePage({
           </CardFooter>
         </Card>
       </div>
+
+      {isRegistered && (
+        <Card className='mt-6'>
+          <CardHeader>
+            <CardTitle>Capture Progress</CardTitle>
+            <CardDescription>
+              Take periodic screenshots of your work
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <PeriodicScreenshotCapture
+              challengeId={challenge.id}
+              teamId={teamId}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       <div className='mt-10 space-y-6'>
         <Card>

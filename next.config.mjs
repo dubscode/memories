@@ -21,6 +21,11 @@ const nextConfig = {
         hostname: 'img.clerk.com',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'red-grass-469.fly.storage.tigris.dev',
+        port: '',
+      },
     ],
   },
 };
