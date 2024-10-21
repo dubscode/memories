@@ -1,0 +1,4 @@
+- Challenge Management Setup
+- User Sign-up for Challenges
+- Image Capture for Development Process
+- Integration and UI
