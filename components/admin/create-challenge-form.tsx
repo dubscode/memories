@@ -1,15 +1,5 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { formatISO, parseISO } from 'date-fns';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-import { createChallenge } from '@/app/admin/actions/create-challenge-action';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -19,10 +9,20 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { formatISO, parseISO } from 'date-fns';
+
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { createChallenge } from '@/app/admin/actions/create-challenge-action';
 import { insertChallengeSchema } from '@/lib/db/schema/challenges';
+import { useAuth } from '@clerk/nextjs';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Update the schema to expect ISO date strings
 const formSchema = insertChallengeSchema.extend({
@@ -30,7 +30,7 @@ const formSchema = insertChallengeSchema.extend({
   endDate: z.string(),
 });
 
-export default function CreateChallengeForm() {
+export function CreateChallengeForm() {
   const router = useRouter();
   const { userId } = useAuth();
   const { toast } = useToast();
