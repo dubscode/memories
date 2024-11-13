@@ -1,4 +1,4 @@
-import { Calendar, Clock, FileText, Users } from 'lucide-react';
+import { Calendar, Clock, Users } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -8,10 +8,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+import { AddResourceForm } from '@/components/resources/add-resource-form';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { EditableDescription } from '@/components/challenges/editable-description';
+import { EventList } from '@/components/events/event-list';
 import Link from 'next/link';
 import { PeriodicScreenshotCapture } from '@/components/captures/periodic-screenshot-capture';
+import { RegisteredTeams } from '@/components/challenges/registered-teams';
+import { ResourceList } from '@/components/resources/resource-list';
 import { auth } from '@clerk/nextjs/server';
 import { format } from 'date-fns';
 import { getChallengeDetails } from '@/lib/models/challenges';
@@ -36,18 +41,19 @@ export default async function ChallengePage({
     params.id,
   );
 
+  const isOrganizer = challenge.organizer.id === dbUserId;
+
   return (
     <div className='container mx-auto py-10'>
       <h1 className='text-4xl font-bold mb-6'>{challenge.name}</h1>
       <div className='grid gap-6 md:grid-cols-3'>
-        <Card className='md:col-span-2'>
-          <CardHeader>
-            <CardTitle>Description</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>{challenge.description}</p>
-          </CardContent>
-        </Card>
+        <div className='md:col-span-2'>
+          <EditableDescription
+            initialDescription={challenge.description}
+            challengeId={challenge.id}
+            isOrganizer={isOrganizer}
+          />
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Details</CardTitle>
@@ -55,11 +61,11 @@ export default async function ChallengePage({
           <CardContent className='space-y-2'>
             <div className='flex items-center'>
               <Calendar className='mr-2 h-4 w-4' />
-              <span>Start: {format(challenge.startDate, 'PPP')}</span>
+              <span>Start: {format(challenge.startDate, 'E, P p')}</span>
             </div>
             <div className='flex items-center'>
               <Clock className='mr-2 h-4 w-4' />
-              <span>End: {format(challenge.endDate, 'PPP')}</span>
+              <span>End: {format(challenge.endDate, 'E, P p')}</span>
             </div>
             <div className='flex items-center'>
               <Users className='mr-2 h-4 w-4' />
@@ -110,33 +116,11 @@ export default async function ChallengePage({
       )}
 
       <div className='mt-10 space-y-6'>
-        <Card>
-          <CardHeader>
-            <CardTitle>Events</CardTitle>
-            <CardDescription>
-              Scheduled events for this challenge
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {challenge.events.length > 0 ? (
-              <ul className='space-y-2'>
-                {challenge.events.map((event) => (
-                  <li
-                    key={event.id}
-                    className='flex items-center justify-between'
-                  >
-                    <span>{event.name}</span>
-                    <span className='text-sm text-muted-foreground'>
-                      {format(event.startDate, 'PPP')}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No events scheduled yet.</p>
-            )}
-          </CardContent>
-        </Card>
+        <EventList
+          events={challenge.events}
+          isOrganizer={isOrganizer}
+          challengeId={challenge.id}
+        />
 
         <Card>
           <CardHeader>
@@ -164,54 +148,23 @@ export default async function ChallengePage({
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Teams</CardTitle>
-            <CardDescription>Participating teams</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {challenge.teams.length > 0 ? (
-              <ul className='grid grid-cols-2 md:grid-cols-3 gap-2'>
-                {challenge.teams.map((team) => (
-                  <li key={team.id}>
-                    <Badge variant='secondary'>{team.name}</Badge>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No teams registered yet.</p>
-            )}
-          </CardContent>
-        </Card>
+        <RegisteredTeams teams={challenge.teams} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Resources</CardTitle>
-            <CardDescription>
-              Helpful resources for participants
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {challenge.resources.length > 0 ? (
-              <ul className='space-y-2'>
-                {challenge.resources.map((resource) => (
-                  <li key={resource.resourceId}>
-                    <a
-                      href={resource.url || '#'}
-                      className='flex items-center hover:underline'
-                      target='_blank'
-                    >
-                      <FileText className='mr-2 h-4 w-4' />
-                      {resource.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No resources available yet.</p>
-            )}
-          </CardContent>
-        </Card>
+        <ResourceList resources={challenge.resources} />
+
+        {isOrganizer && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Resource</CardTitle>
+              <CardDescription>
+                Add a helpful resource for participants
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AddResourceForm challengeId={challenge.id} />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
