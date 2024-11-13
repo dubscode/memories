@@ -72,7 +72,15 @@ export async function getChallengeDetails(id: string) {
       organizer: true,
       events: true,
       stages: true,
-      teams: true,
+      teams: {
+        with: {
+          members: {
+            with: {
+              user: true,
+            },
+          },
+        },
+      },
       resources: true,
       tags: {
         with: {

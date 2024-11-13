@@ -1,8 +1,9 @@
-import { challenges } from './challenges';
-
-import { relations, sql } from 'drizzle-orm';
 import { index, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
+
+import { challenges } from './challenges';
 import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 export const events = pgTable(
   'events',
@@ -46,12 +47,18 @@ export const eventsRelations = relations(events, ({ one }) => ({
   }),
 }));
 
-export const insertEventSchema = createInsertSchema(events).omit({
+export const insertEventSchema = createInsertSchema(events, {
+  startDate: z.string(),
+  endDate: z.string(),
+}).omit({
   created: true,
   updated: true,
 });
 
-export const updateEventSchema = createInsertSchema(events).omit({
+export const updateEventSchema = createInsertSchema(events, {
+  startDate: z.string(),
+  endDate: z.string(),
+}).omit({
   created: true,
   updated: true,
 });

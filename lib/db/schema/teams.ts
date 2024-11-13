@@ -1,11 +1,3 @@
-import { challenges } from './challenges';
-import { fileStorage } from './file-storage';
-import { notes } from './notes';
-import { submissions } from './submissions';
-import { tasks } from './tasks';
-import { users } from './users';
-
-import { relations, sql } from 'drizzle-orm';
 import {
   index,
   pgTable,
@@ -13,7 +5,16 @@ import {
   timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
+
+import { challenges } from './challenges';
 import { createInsertSchema } from 'drizzle-zod';
+import { fileStorage } from './file-storage';
+import { notes } from './notes';
+import { submissions } from './submissions';
+import { tasks } from './tasks';
+import { teamMembers } from './team-members';
+import { users } from './users';
 
 export const teams = pgTable(
   'teams',
@@ -56,7 +57,7 @@ export const teamsRelations = relations(teams, ({ one, many }) => ({
     references: [challenges.id],
   }),
   files: many(fileStorage),
-  members: many(users),
+  members: many(teamMembers),
   notes: many(notes),
   submission: one(submissions, {
     fields: [teams.id],
