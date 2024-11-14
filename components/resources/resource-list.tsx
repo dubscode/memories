@@ -8,6 +8,7 @@ import {
 import { FileText, LinkIcon, PenToolIcon as Tool, Users } from 'lucide-react';
 
 import { ResourceType } from '@/lib/db/schema/resources';
+import { sortBy } from 'lodash';
 
 interface ResourceListProps {
   resources: ResourceType[];
@@ -36,7 +37,7 @@ export function ResourceList({ resources }: ResourceListProps) {
       <CardContent>
         {resources.length > 0 ? (
           <ul className='space-y-2'>
-            {resources.map((resource) => (
+            {sortBy(resources, 'title').map((resource) => (
               <li key={resource.resourceId}>
                 <a
                   href={resource.url || '#'}
