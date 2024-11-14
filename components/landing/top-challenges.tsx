@@ -60,6 +60,14 @@ export const TopChallenges = ({ challenges }: TopChallengesProps) => {
             </Card>
           ))}
         </div>
+        <div className='mt-8 flex justify-center'>
+          <Link href='/admin'>
+            <Button size='lg'>
+              Create Your Own Challenge
+              <ArrowRight className='ml-2 h-4 w-4' />
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   );
