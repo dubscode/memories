@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { Textarea } from '@/components/ui/textarea';
 import { updateChallengeDescription } from '@/app/actions/update-challenge-description';
 import { useState } from 'react';
@@ -38,13 +39,13 @@ export function EditableDescription({
         description: 'The challenge description has been successfully updated.',
       });
     } catch (error) {
-      const description =
+      const errorMessage =
         error instanceof Error
           ? error.message
           : 'Failed to update the challenge description. Please try again.';
       toast({
         title: 'Error',
-        description,
+        description: errorMessage,
         variant: 'destructive',
       });
     }
@@ -82,7 +83,9 @@ export function EditableDescription({
             </div>
           </div>
         ) : (
-          <p>{description}</p>
+          <div className='prose dark:prose-invert max-w-none'>
+            <ReactMarkdown>{description ?? ''}</ReactMarkdown>
+          </div>
         )}
       </CardContent>
     </Card>
