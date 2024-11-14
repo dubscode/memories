@@ -29,7 +29,7 @@ export function ResourceList({ resources }: ResourceListProps) {
   };
 
   return (
-    <Card>
+    <Card className='bg-accent'>
       <CardHeader>
         <CardTitle>Resources</CardTitle>
         <CardDescription>Helpful resources for participants</CardDescription>

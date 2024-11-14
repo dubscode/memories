@@ -51,7 +51,7 @@ export function EventList({
   };
 
   return (
-    <Card>
+    <Card className='bg-accent'>
       <CardHeader>
         <CardTitle>Events</CardTitle>
         <CardDescription>Scheduled events for this challenge</CardDescription>

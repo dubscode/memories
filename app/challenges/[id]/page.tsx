@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/card';
 
 import { AddResourceForm } from '@/components/resources/add-resource-form';
+import { AddStageForm } from '@/components/stages/add-stage-form';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { EditableDescription } from '@/components/challenges/editable-description';
@@ -17,6 +18,7 @@ import Link from 'next/link';
 import { PeriodicScreenshotCapture } from '@/components/captures/periodic-screenshot-capture';
 import { RegisteredTeams } from '@/components/challenges/registered-teams';
 import { ResourceList } from '@/components/resources/resource-list';
+import { StageList } from '@/components/stages/stage-list';
 import { auth } from '@clerk/nextjs/server';
 import { format } from 'date-fns';
 import { getChallengeDetails } from '@/lib/models/challenges';
@@ -54,7 +56,7 @@ export default async function ChallengePage({
             isOrganizer={isOrganizer}
           />
         </div>
-        <Card>
+        <Card className='bg-accent'>
           <CardHeader>
             <CardTitle>Details</CardTitle>
           </CardHeader>
@@ -98,7 +100,7 @@ export default async function ChallengePage({
       </div>
 
       {isRegistered && (
-        <Card className='mt-6'>
+        <Card className='mt-6 bg-accent'>
           <CardHeader>
             <CardTitle>Capture Progress</CardTitle>
             <CardDescription>
@@ -122,31 +124,21 @@ export default async function ChallengePage({
           challengeId={challenge.id}
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Stages</CardTitle>
-            <CardDescription>Challenge stages and milestones</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {challenge.stages.length > 0 ? (
-              <ul className='space-y-2'>
-                {challenge.stages.map((stage) => (
-                  <li
-                    key={stage.id}
-                    className='flex items-center justify-between'
-                  >
-                    <span>{stage.name}</span>
-                    <Badge variant='outline'>
-                      {stage.durationMinutes} minutes
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No stages defined yet.</p>
-            )}
-          </CardContent>
-        </Card>
+        <StageList stages={challenge.stages} />
+
+        {isOrganizer && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Stage</CardTitle>
+              <CardDescription>
+                Add a new stage to the challenge
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AddStageForm challengeId={challenge.id} />
+            </CardContent>
+          </Card>
+        )}
 
         <RegisteredTeams teams={challenge.teams} />
 
