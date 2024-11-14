@@ -1,4 +1,4 @@
-import { asc, eq, gt } from 'drizzle-orm';
+import { and, asc, eq, gt } from 'drizzle-orm';
 import { challenges, users } from '@/lib/db/schema';
 
 import { auth } from '@clerk/nextjs/server';
@@ -94,7 +94,7 @@ export async function getChallengeDetails(id: string) {
 export async function getTopChallenges(limit = 5) {
   const now = new Date();
   return await db.query.challenges.findMany({
-    where: gt(challenges.endDate, now),
+    where: and(gt(challenges.endDate, now), eq(challenges.public, true)),
     orderBy: asc(challenges.startDate),
     limit,
     with: { teams: true },
