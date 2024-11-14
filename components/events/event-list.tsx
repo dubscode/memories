@@ -5,14 +5,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { compareAsc, format } from 'date-fns';
 import { formatToICSDate, generateICS } from '@/lib/utils';
 
-import { AddEventForm } from './add-event-form';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { EventType } from '@/lib/db/schema/events';
@@ -23,11 +21,7 @@ interface EventListProps {
   challengeId: string;
 }
 
-export function EventList({
-  events,
-  isOrganizer,
-  challengeId,
-}: EventListProps) {
+export function EventList({ events }: EventListProps) {
   const sortedEvents = [...events].sort((a, b) =>
     compareAsc(new Date(a.startDate), new Date(b.startDate)),
   );
@@ -111,11 +105,6 @@ export function EventList({
           </p>
         )}
       </CardContent>
-      {isOrganizer && (
-        <CardFooter>
-          <AddEventForm challengeId={challengeId} />
-        </CardFooter>
-      )}
     </Card>
   );
 }

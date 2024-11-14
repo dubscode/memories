@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Play, StopCircle } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,126 +24,75 @@ interface StageListProps {
 }
 
 export function StageList({ stages, teamMember }: StageListProps) {
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
-  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
-  const [lastSavedTime, setLastSavedTime] = useState<number>(0);
-  const [totalTimeTracked, setTotalTimeTracked] = useState<number>(
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [totalTimeTracked, setTotalTimeTracked] = useState(
     teamMember?.timeTracked || 0,
   );
+  const lastSavedMinuteRef = useRef(0);
   const { toast } = useToast();
 
-  const saveLoggedTime = useCallback(
-    async (seconds: number) => {
-      if (!teamMember) return;
-      const minutes = Math.ceil(seconds / 60);
-      try {
-        const result = await updateTeamMemberTimeTracked(
-          teamMember.teamId,
-          teamMember.userId,
-          minutes,
-        );
-        if (result.success) {
-          setLastSavedTime(seconds);
-          setTotalTimeTracked(result.timeTracked || 0);
-          toast({
-            title: 'Time logged',
-            description: `${minutes} minutes added to your total time.`,
-          });
-        } else {
-          throw new Error(result.error);
-        }
-      } catch (error) {
-        console.error('Failed to save logged time:', error);
+  const saveLoggedTime = useCallback(async () => {
+    if (!teamMember) return;
+    try {
+      const result = await updateTeamMemberTimeTracked(
+        teamMember.teamId,
+        teamMember.userId,
+        1,
+      );
+      if (result.success) {
+        setTotalTimeTracked(result.timeTracked || 0);
         toast({
-          title: 'Error',
-          description: 'Failed to save logged time. Please try again.',
-          variant: 'destructive',
+          title: 'Time logged',
+          description: '1 minute added to your total time.',
         });
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [teamMember?.teamId, teamMember?.userId],
-  );
-
-  useEffect(() => {
-    if (!teamMember) return;
-    const savedState = localStorage.getItem(`timerState_${teamMember.userId}`);
-    if (savedState) {
-      const {
-        isTimerRunning: savedIsTimerRunning,
-        elapsedSeconds: savedElapsedSeconds,
-      } = JSON.parse(savedState);
-      setIsTimerRunning(savedIsTimerRunning);
-      setElapsedSeconds(savedElapsedSeconds);
+    } catch (error) {
+      console.error('Failed to save logged time:', error);
     }
-  }, [teamMember]);
+  }, [teamMember, toast]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    let intervalId: NodeJS.Timeout;
 
     if (isTimerRunning) {
-      interval = setInterval(() => {
-        setElapsedSeconds((prevSeconds) => {
-          const newSeconds = prevSeconds + 1;
-          if (teamMember) {
-            localStorage.setItem(
-              `timerState_${teamMember.userId}`,
-              JSON.stringify({ isTimerRunning, elapsedSeconds: newSeconds }),
-            );
+      intervalId = setInterval(() => {
+        setElapsedSeconds((prev) => {
+          const newSeconds = prev + 1;
+          const currentMinute = Math.floor(newSeconds / 60);
+
+          if (currentMinute > lastSavedMinuteRef.current) {
+            lastSavedMinuteRef.current = currentMinute;
+            saveLoggedTime();
           }
+
           return newSeconds;
         });
       }, 1000);
-    } else if (interval) {
-      clearInterval(interval);
     }
 
     return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isTimerRunning, teamMember]);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        if (isTimerRunning) {
-          saveLoggedTime(elapsedSeconds - lastSavedTime);
-        }
+      if (intervalId) {
+        clearInterval(intervalId);
       }
     };
-
-    const handleBeforeUnload = () => {
-      if (isTimerRunning) {
-        saveLoggedTime(elapsedSeconds - lastSavedTime);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [isTimerRunning, elapsedSeconds, lastSavedTime, saveLoggedTime]);
-
-  useEffect(() => {
-    if (isTimerRunning && elapsedSeconds - lastSavedTime >= 60) {
-      saveLoggedTime(elapsedSeconds - lastSavedTime);
-    }
-  }, [isTimerRunning, elapsedSeconds, lastSavedTime, saveLoggedTime]);
+  }, [isTimerRunning, saveLoggedTime]);
 
   const handleStartTimer = () => {
     setIsTimerRunning(true);
+    lastSavedMinuteRef.current = 0;
   };
 
   const handleStopTimer = async () => {
-    if (!teamMember) return;
     setIsTimerRunning(false);
-    await saveLoggedTime(elapsedSeconds - lastSavedTime);
+
+    // If we have any seconds logged at all, save a minute
+    if (elapsedSeconds > 0) {
+      await saveLoggedTime();
+    }
+
     setElapsedSeconds(0);
-    setLastSavedTime(0);
-    localStorage.removeItem(`timerState_${teamMember.userId}`);
+    lastSavedMinuteRef.current = 0;
   };
 
   const formatTime = (seconds: number) => {

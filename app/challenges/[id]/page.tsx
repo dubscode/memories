@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+import { AddEventForm } from '@/components/events/add-event-form';
 import { AddResourceForm } from '@/components/resources/add-resource-form';
 import { AddStageForm } from '@/components/stages/add-stage-form';
 import { Badge } from '@/components/ui/badge';
@@ -120,14 +121,24 @@ export default async function ChallengePage({
         </Card>
       )}
 
-      <div className='mt-10 space-y-6'>
+      <div className='mt-6 space-y-6'>
+        <StageList stages={challenge.stages} teamMember={teamMember} />
+
         <EventList
           events={challenge.events}
           isOrganizer={isOrganizer}
           challengeId={challenge.id}
         />
 
-        <StageList stages={challenge.stages} teamMember={teamMember} />
+        <RegisteredTeams teams={challenge.teams} />
+
+        <ResourceList resources={challenge.resources} />
+
+        {isOrganizer && (
+          <CardFooter>
+            <AddEventForm challengeId={challenge.id} />
+          </CardFooter>
+        )}
 
         {isOrganizer && (
           <Card>
@@ -142,10 +153,6 @@ export default async function ChallengePage({
             </CardContent>
           </Card>
         )}
-
-        <RegisteredTeams teams={challenge.teams} />
-
-        <ResourceList resources={challenge.resources} />
 
         {isOrganizer && (
           <Card>
