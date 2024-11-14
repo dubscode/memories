@@ -1,0 +1,1 @@
+ALTER TABLE "stages" ADD COLUMN "logged_minutes" integer DEFAULT 0;

@@ -1,10 +1,10 @@
+import { index, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
+
 import { challenges } from './challenges';
+import { createInsertSchema } from 'drizzle-zod';
 import { notes } from './notes';
 import { tasks } from './tasks';
-
-import { relations, sql } from 'drizzle-orm';
-import { index, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
 
 export const stages = pgTable(
   'stages',
@@ -19,6 +19,7 @@ export const stages = pgTable(
     name: text('name').notNull(),
     description: text('description'),
     durationMinutes: integer('duration_minutes'), // Optional time limit in minutes
+    loggedMinutes: integer('logged_minutes').default(0), // Total time logged by participants
     order: integer('order').notNull().default(0), // To track order of stages
     created: timestamp('created', { precision: 6, withTimezone: true })
       .defaultNow()

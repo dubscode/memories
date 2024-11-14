@@ -22,6 +22,7 @@ import { StageList } from '@/components/stages/stage-list';
 import { auth } from '@clerk/nextjs/server';
 import { format } from 'date-fns';
 import { getChallengeDetails } from '@/lib/models/challenges';
+import { getTeamMemberAction } from '@/app/actions/get-team-member-action';
 import { isRegisteredForChallenge } from '@/lib/models/users';
 import { notFound } from 'next/navigation';
 
@@ -42,6 +43,8 @@ export default async function ChallengePage({
     userId,
     params.id,
   );
+
+  const { teamMember } = await getTeamMemberAction(teamId, dbUserId);
 
   const isOrganizer = challenge.organizer.id === dbUserId;
 
@@ -124,7 +127,7 @@ export default async function ChallengePage({
           challengeId={challenge.id}
         />
 
-        <StageList stages={challenge.stages} />
+        <StageList stages={challenge.stages} teamMember={teamMember} />
 
         {isOrganizer && (
           <Card>
