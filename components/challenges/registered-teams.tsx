@@ -37,7 +37,7 @@ interface RegisteredTeamsProps {
 
 export function RegisteredTeams({ teams }: RegisteredTeamsProps) {
   return (
-    <Card>
+    <Card className='bg-accent'>
       <CardHeader>
         <CardTitle>Teams</CardTitle>
         <CardDescription>Participating teams</CardDescription>

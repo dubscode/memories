@@ -8,7 +8,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+import { AddEventForm } from '@/components/events/add-event-form';
 import { AddResourceForm } from '@/components/resources/add-resource-form';
+import { AddStageForm } from '@/components/stages/add-stage-form';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { EditableDescription } from '@/components/challenges/editable-description';
@@ -17,9 +19,11 @@ import Link from 'next/link';
 import { PeriodicScreenshotCapture } from '@/components/captures/periodic-screenshot-capture';
 import { RegisteredTeams } from '@/components/challenges/registered-teams';
 import { ResourceList } from '@/components/resources/resource-list';
+import { StageList } from '@/components/stages/stage-list';
 import { auth } from '@clerk/nextjs/server';
 import { format } from 'date-fns';
 import { getChallengeDetails } from '@/lib/models/challenges';
+import { getTeamMemberAction } from '@/app/actions/get-team-member-action';
 import { isRegisteredForChallenge } from '@/lib/models/users';
 import { notFound } from 'next/navigation';
 
@@ -41,6 +45,8 @@ export default async function ChallengePage({
     params.id,
   );
 
+  const { teamMember } = await getTeamMemberAction(teamId, dbUserId);
+
   const isOrganizer = challenge.organizer.id === dbUserId;
 
   return (
@@ -54,7 +60,7 @@ export default async function ChallengePage({
             isOrganizer={isOrganizer}
           />
         </div>
-        <Card>
+        <Card className='bg-accent'>
           <CardHeader>
             <CardTitle>Details</CardTitle>
           </CardHeader>
@@ -98,7 +104,7 @@ export default async function ChallengePage({
       </div>
 
       {isRegistered && (
-        <Card className='mt-6'>
+        <Card className='mt-6 bg-accent'>
           <CardHeader>
             <CardTitle>Capture Progress</CardTitle>
             <CardDescription>
@@ -115,42 +121,38 @@ export default async function ChallengePage({
         </Card>
       )}
 
-      <div className='mt-10 space-y-6'>
+      <div className='mt-6 space-y-6'>
+        <StageList stages={challenge.stages} teamMember={teamMember} />
+
         <EventList
           events={challenge.events}
           isOrganizer={isOrganizer}
           challengeId={challenge.id}
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Stages</CardTitle>
-            <CardDescription>Challenge stages and milestones</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {challenge.stages.length > 0 ? (
-              <ul className='space-y-2'>
-                {challenge.stages.map((stage) => (
-                  <li
-                    key={stage.id}
-                    className='flex items-center justify-between'
-                  >
-                    <span>{stage.name}</span>
-                    <Badge variant='outline'>
-                      {stage.durationMinutes} minutes
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No stages defined yet.</p>
-            )}
-          </CardContent>
-        </Card>
-
         <RegisteredTeams teams={challenge.teams} />
 
         <ResourceList resources={challenge.resources} />
+
+        {isOrganizer && (
+          <CardFooter>
+            <AddEventForm challengeId={challenge.id} />
+          </CardFooter>
+        )}
+
+        {isOrganizer && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Stage</CardTitle>
+              <CardDescription>
+                Add a new stage to the challenge
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AddStageForm challengeId={challenge.id} />
+            </CardContent>
+          </Card>
+        )}
 
         {isOrganizer && (
           <Card>
