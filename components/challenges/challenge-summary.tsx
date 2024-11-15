@@ -1,6 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { Calendar, Clock, Mail, Users } from 'lucide-react';
+import Link from 'next/link';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,12 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
-
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { ChallengeDetails } from '@/lib/types/challenges';
-import Link from 'next/link';
 
 type ChallengeSummaryProps = {
   challenge: ChallengeDetails;
@@ -55,7 +56,7 @@ export function ChallengeSummary({
   if (!challenge) return null;
 
   return (
-    <Card className='bg-accent mt-6'>
+    <Card className='bg-accent'>
       <CardHeader>
         <CardTitle>Details</CardTitle>
       </CardHeader>

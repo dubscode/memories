@@ -1,13 +1,14 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { Textarea } from '@/components/ui/textarea';
+
 import { updateChallengeDescription } from '@/app/actions/update-challenge-description';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 
 interface EditableDescriptionProps {
@@ -57,7 +58,7 @@ export function EditableDescription({
   };
 
   return (
-    <Card className='bg-accent'>
+    <Card className='bg-accent mt-6'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
         <CardTitle>Description</CardTitle>
         {isOrganizer && !isEditing && (

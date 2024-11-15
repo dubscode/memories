@@ -1,3 +1,17 @@
+import { auth } from '@clerk/nextjs/server';
+import { notFound } from 'next/navigation';
+
+import { getTeamMemberAction } from '@/app/actions/get-team-member-action';
+import { PeriodicScreenshotCapture } from '@/components/captures/periodic-screenshot-capture';
+import { ChallengeSummary } from '@/components/challenges/challenge-summary';
+import { EditableDescription } from '@/components/challenges/editable-description';
+import { RegisteredTeams } from '@/components/challenges/registered-teams';
+import { AddEventForm } from '@/components/events/add-event-form';
+import { EventList } from '@/components/events/event-list';
+import { AddResourceForm } from '@/components/resources/add-resource-form';
+import { ResourceList } from '@/components/resources/resource-list';
+import { AddStageForm } from '@/components/stages/add-stage-form';
+import { StageList } from '@/components/stages/stage-list';
 import {
   Card,
   CardContent,
@@ -5,22 +19,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
-import { AddEventForm } from '@/components/events/add-event-form';
-import { AddResourceForm } from '@/components/resources/add-resource-form';
-import { AddStageForm } from '@/components/stages/add-stage-form';
-import { ChallengeSummary } from '@/components/challenges/challenge-summary';
-import { EditableDescription } from '@/components/challenges/editable-description';
-import { EventList } from '@/components/events/event-list';
-import { PeriodicScreenshotCapture } from '@/components/captures/periodic-screenshot-capture';
-import { RegisteredTeams } from '@/components/challenges/registered-teams';
-import { ResourceList } from '@/components/resources/resource-list';
-import { StageList } from '@/components/stages/stage-list';
-import { auth } from '@clerk/nextjs/server';
 import { getChallengeDetails } from '@/lib/models/challenges';
-import { getTeamMemberAction } from '@/app/actions/get-team-member-action';
 import { isRegisteredForChallenge } from '@/lib/models/users';
-import { notFound } from 'next/navigation';
 
 export default async function ChallengePage({
   params,
@@ -47,13 +47,13 @@ export default async function ChallengePage({
   return (
     <div className='container mx-auto py-10'>
       <h1 className='text-4xl font-bold mb-6'>{challenge.name}</h1>
+      <ChallengeSummary challenge={challenge} isRegistered={isRegistered} />
+
       <EditableDescription
         initialDescription={challenge.description}
         challengeId={challenge.id}
         isOrganizer={isOrganizer}
       />
-
-      <ChallengeSummary challenge={challenge} isRegistered={isRegistered} />
 
       {isRegistered && (
         <Card className='mt-6 bg-accent'>
